@@ -190,7 +190,16 @@ a{color:var(--accent)}
   padding:3px 7px; border-radius:20px; border:1px solid var(--line-strong); color:var(--text-3); white-space:nowrap;
 }
 .pill.req{background:var(--accent-soft); border-color:transparent; color:var(--accent)}
-.pill.warnp{background:var(--copper-soft); border-color:transparent; color:var(--copper)}
+.pill.warnp{background:var(--crit-soft); border-color:transparent; color:var(--crit)}
+/* Offering pattern: three slots for Fall 26 / Winter 27 / Spring 27. */
+.qs{display:flex; gap:2px}
+.qs i{
+  font-family:var(--mono); font-style:normal; font-size:9px; font-weight:600;
+  width:15px; height:15px; line-height:15px; text-align:center; border-radius:3px;
+  background:var(--surface-3); color:var(--text-3);
+}
+.qs i.on{background:var(--accent); color:var(--accent-ink)}
+.qs.est i.on{background:transparent; color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent)}
 .dot{width:9px; height:9px; border-radius:50%; flex:0 0 auto; background:var(--sev)}
 .row.done .body .ttl,.row.done .code{text-decoration:line-through; color:var(--text-3); text-decoration-thickness:1px}
 
@@ -270,9 +279,11 @@ details .dbody p{font-size:13.5px; color:var(--text-2); max-width:74ch; margin:0
 
 <div class="wrap">
   <div class="notice">
-    <h3>Read this before you register</h3>
-    <p><b>Verify every course against the ECE tentative course list and WebReg before you enroll.</b> This environment could not reach ucsd.edu, so quarter-by-quarter offerings here are inferred from the ECE department's own degree plans, published syllabi and prerequisite pages — not from a live schedule read. Courses marked <span class="pill warnp">verify</span> are the ones where a wrong guess costs you a quarter.</p>
-    <p>Prerequisites, requirement counts and unit totals come from your 07/28/2026 audit and the UCSD catalog, and are solid. The sequencing logic is solid. The one open variable is which quarter each course actually runs.</p>
+    <h3>Built on the real 2026–27 schedule</h3>
+    <p>Every ECE course below is placed against the department's own tentative course list for Fall 26 / Winter 27 / Spring 27, and every prerequisite comes from the ECE prerequisites page. The three slots on each row — <span class="qs" style="display:inline-flex;vertical-align:-3px"><i class="on">F</i><i>W</i><i class="on">S</i></span> — show exactly which quarters that course runs. A hollow outline means the course is outside ECE and its availability is assumed, not read.</p>
+    <p><b>Two required depth courses are not being offered at all this year:</b> ECE 157A (Communication Systems) and ECE 161C (Signal &amp; Image Processing). Those two depths are flagged accordingly.</p>
+    <p>Summer 2027 is listed as TBD for every ECE course, so nothing technical is scheduled there — only COMM, Rady and physics courses that reliably run in summer. Anything placed in Fall 2027 or later assumes next year's pattern matches this year's.</p>
+    <p><b>Every course used for a major requirement must be a letter grade, C− or better.</b> No P/NP.</p>
   </div>
 </div>
 
@@ -286,8 +297,8 @@ details .dbody p{font-size:13.5px; color:var(--text-2); max-width:74ch; margin:0
   <main id="panels"></main>
 
   <div class="foot">
-    <p><b>How difficulty is scored.</b> Each course carries a 1–5 load rating based on its structure — lab + lecture, heavy proof/math, cleanroom or capstone project, or lecture-only GE — not on scraped grade data. CAPE/SET statistics were not reachable from this environment, so treat the ramp as a considered ranking, not a measurement. A term's load is the sum of its courses; anything at 15+ is a genuinely hard quarter.</p>
-    <p><b>Sources.</b> Your degree audit (07/28/2026) · <a href="https://catalog.ucsd.edu/courses/ECE.html">UCSD ECE catalog</a> · <a href="https://www.ece.ucsd.edu/undergraduate/course-information/ece-course-prerequisites">ECE course prerequisites</a> · <a href="https://www.ece.ucsd.edu/ece-tentative-course-list">ECE tentative course list</a> · <a href="https://ece.ucsd.edu/sites/default/files/undergraduate/Plans/2021%20Plans/2021%20EE%20TRANSFER%20PLANS.pdf">ECE transfer plans</a> · <a href="https://senate.ucsd.edu/media/513521/dei-list-of-courses.pdf">DEI course list</a> · <a href="https://catalog.ucsd.edu/undergraduate/degree-requirements/index.html">AHI requirement</a> · <a href="https://catalog.ucsd.edu/curric/COMM-ug.html">COMM major requirements</a></p>
+    <p><b>How difficulty is scored.</b> Each course carries a 1–5 load rating based on its structure — lab + lecture, heavy proof/math, cleanroom or capstone project, or lecture-only GE. These are <b>not</b> grade statistics: the SunSET dataset lives in a Google Sheet this build could not reach, so no real distributions are folded in yet. Treat the ramp as a considered ranking, not a measurement. A term's load is the sum of its courses; 15+ is a genuinely hard quarter.</p>
+    <p><b>Sources.</b> Your degree audit (07/28/2026) · ECE Tentative Course List 2026–27 · ECE Course Prerequisites · EE Depth Pathways 2026–27 (all three supplied directly) · <a href="https://senate.ucsd.edu/media/513521/dei-list-of-courses.pdf">DEI course list</a> · <a href="https://catalog.ucsd.edu/curric/COMM-ug.html">COMM major requirements</a> · <a href="https://github.com/SheepTester/ucsd-sunset">SunSET grade data</a></p>
     <p>Checkmarks save in this browser only. Not an official record — confirm with ECE Undergraduate Student Affairs and Warren Academic Advising.</p>
   </div>
 </div>
@@ -298,214 +309,269 @@ details .dbody p{font-size:13.5px; color:var(--text-2); max-width:74ch; margin:0
    confidence: high (runs most quarters) / med (1-2x per year) /
    low (annual or irregular - must be verified).
 ----------------------------------------------------------------*/
+/* ---------------------------------------------------------------
+   Course library.
+   d  = load rating 1..5 (structural: lab+lecture, math depth,
+        cleanroom/capstone, or lecture-only GE)
+   q  = quarters offered in 2026-27, read off the ECE department's
+        tentative course list: F = Fall 26, W = Winter 27, S = Spring 27.
+        "" means the department is not offering it at all this year.
+   a  = true when availability is assumed rather than read from the
+        ECE list (non-ECE courses, which the list does not cover).
+   p  = prerequisites, from the ECE course prerequisites page.
+----------------------------------------------------------------*/
 const C = {
-  "ECE 65":   {t:"Components & Circuits Lab", u:4, d:4, o:"high", p:"ECE 35 ✓ — retake, failed SP26"},
-  "ECE 17":   {t:"Object-Oriented Programming in C++", u:4, d:2, o:"high", p:"ECE 15 ✓"},
-  "ECE 18":   {t:"Programming in Python & OO Principles", u:4, d:2, o:"high", p:"ECE 15 ✓"},
-  "PHYS 2D":  {t:"Physics — Modern Physics", u:4, d:3, o:"high", p:"PHYS 2C ✓, MATH 20D ✓"},
-  "ECE 100":  {t:"Linear Electronic Systems", u:4, d:4, o:"high", p:"ECE 45 ✓ + ECE 65"},
-  "ECE 101":  {t:"Linear Systems Fundamentals", u:4, d:4, o:"high", p:"MATH 20D ✓, ECE 45 ✓, ECE 65 (may be concurrent)"},
-  "ECE 102":  {t:"Introduction to Active Circuit Design", u:4, d:4, o:"med", p:"ECE 65 + ECE 100"},
-  "ECE 103":  {t:"Fundamentals of Devices & Materials", u:4, d:3, o:"med", p:"ECE 65 + PHYS 2D"},
-  "ECE 107":  {t:"Electromagnetism", u:4, d:4, o:"med", p:"MATH 20D–E ✓, PHYS 2A–C ✓, ECE 45 ✓"},
-  "ECE 109":  {t:"Engineering Probability & Statistics", u:4, d:3, o:"high", p:"MATH 20A–D ✓, MATH 18 ✓"},
-  "ECE 111":  {t:"Advanced Digital Design Project", u:4, d:3, o:"med", p:"ECE 25 ✓"},
-  "ECE 115":  {t:"Fast Prototyping", u:4, d:3, o:"low", p:"ECE 65"},
-  "ECE 116":  {t:"Advanced Hardware & Software Design", u:4, d:3, o:"med", p:"ECE 5 ✓, ECE 15 ✓, ECE 18"},
-  "ECE 121A": {t:"Power Systems Analysis & Fundamentals", u:4, d:3, o:"low", p:"ECE 35 ✓ — Fall only"},
-  "ECE 121B": {t:"Power Systems Analysis II", u:4, d:3, o:"low", p:"ECE 121A — Winter only"},
-  "ECE 125A": {t:"Introduction to Power Electronics I", u:4, d:4, o:"low", p:"ECE 121A — Winter only"},
-  "ECE 125B": {t:"Introduction to Power Electronics II", u:4, d:4, o:"low", p:"ECE 125A — Spring only"},
-  "ECE 128A": {t:"Real World Power Grid Operation", u:4, d:2, o:"low", p:"Upper-division standing ✓ — Fall only"},
-  "ECE 135A": {t:"Semiconductor Physics", u:4, d:4, o:"low", p:"PHYS 2C–2D"},
-  "ECE 135B": {t:"Electronic Devices", u:4, d:4, o:"low", p:"ECE 135A"},
-  "ECE 136L": {t:"Microelectronics Laboratory", u:4, d:5, o:"low", p:"ECE 135B — cleanroom fabrication"},
-  "ECE 140A": {t:"The Art of Product Engineering I", u:4, d:2, o:"med", p:"ECE 15 ✓"},
-  "ECE 140B": {t:"The Art of Product Engineering II", u:4, d:3, o:"med", p:"ECE 140A"},
-  "ECE 141A": {t:"Software Foundations I", u:4, d:3, o:"med", p:"ECE 30 ✓"},
-  "ECE 141B": {t:"Software Foundations II", u:4, d:3, o:"med", p:"ECE 141A"},
-  "ECE 153":  {t:"Probability & Random Processes for Engineers", u:4, d:4, o:"med", p:"ECE 109"},
-  "ECE 155":  {t:"Digital Communications Theory", u:4, d:4, o:"low", p:"ECE 101 + ECE 109 + ECE 153"},
-  "ECE 157A": {t:"Communication Systems Laboratory", u:4, d:3, o:"low", p:"ECE 109 + ECE 161A"},
-  "ECE 158A": {t:"Data Networks I", u:4, d:3, o:"med", p:"ECE 109 (C– or better)"},
-  "ECE 158B": {t:"Data Networks II", u:4, d:3, o:"low", p:"ECE 158A (C– or better)"},
-  "ECE 159":  {t:"Data Processing & Information Theory", u:4, d:4, o:"low", p:"ECE 153"},
-  "ECE 161A": {t:"Introduction to Digital Signal Processing", u:4, d:4, o:"low", p:"ECE 101 — commonly Fall"},
-  "ECE 161B": {t:"Digital Signal Processing", u:4, d:3, o:"low", p:"ECE 161A (C– or better)"},
-  "ECE 161C": {t:"Applications of Digital Signal Processing", u:4, d:3, o:"low", p:"ECE 161A"},
-  "ECE 164":  {t:"Analog Integrated Circuit Design", u:4, d:5, o:"low", p:"ECE 102 (C– or better)"},
-  "ECE 165":  {t:"Digital Integrated Circuit Design", u:4, d:4, o:"low", p:"ECE 102"},
-  "ECE 166":  {t:"Microwave Systems & Circuits", u:4, d:4, o:"low", p:"ECE 107"},
-  "ECE 171A": {t:"Linear Control System Theory", u:4, d:3, o:"med", p:"ECE 101"},
-  "ECE 172A": {t:"Introduction to Intelligent Systems", u:4, d:3, o:"med", p:"ECE 101 (C– or better)"},
-  "ECE 174":  {t:"Linear & Nonlinear Optimization", u:4, d:3, o:"med", p:"MATH 18 ✓ + ECE 15 ✓"},
-  "ECE 175A": {t:"Elements of Machine Intelligence", u:4, d:3, o:"med", p:"ECE 109 + ECE 174"},
-  "ECE 175B": {t:"Probabilistic Reasoning & Graphical Models", u:4, d:4, o:"low", p:"ECE 175A"},
-  "ECE 181":  {t:"Physical Optics & Fourier Optics", u:4, d:4, o:"low", p:"ECE 103 + ECE 107"},
-  "ECE 182":  {t:"Electromagnetic Optics & Fiber Optics", u:4, d:4, o:"low", p:"ECE 107 (C– or better)"},
-  "ECE 183":  {t:"Optical Electronics", u:4, d:4, o:"low", p:"ECE 103 + ECE 107"},
-  "ECE 184":  {t:"Optical Information Processing & Holography", u:4, d:4, o:"low", p:"ECE 103 + ECE 107"},
-  "COMM 10":  {t:"Introduction to Communication", u:4, d:1, o:"high", p:"None — also clears the DEI requirement"},
-  "COMM 1xx": {t:"Intermediate COMM elective (101–119)", u:4, d:1, o:"high", p:"COMM 10"},
-  "AHI UD":   {t:"Upper-div social science that clears AHI", u:4, d:1, o:"med", p:"POLI 100A/102C · USP 103/106/167 · ETHN 121/125/130 · SOCI 188K"},
-  "MGT 1xx a":{t:"Rady upper-div elective (MGT 100–199)", u:4, d:2, o:"high", p:"Both professional electives must come from one department"},
-  "MGT 1xx b":{t:"Rady upper-div elective (MGT 100–199)", u:4, d:2, o:"high", p:"COGS 100–199 or ECON 100–199 work equally well"}
+  "ECE 65":   {t:"Components & Circuits Laboratory", u:4, d:4, q:"FWS", p:"ECE 5 ✓ and ECE 35 ✓ — retake, failed SP26"},
+  "ECE 17":   {t:"Object-Oriented Programming with C++", u:4, d:2, q:"F S", p:"ECE 15 ✓"},
+  "ECE 18":   {t:"Programming in Python", u:4, d:2, q:"F  ", p:"ECE 15 ✓"},
+  "PHYS 2D":  {t:"Physics — Modern Physics", u:4, d:3, q:"FWS", a:1, p:"PHYS 2C ✓, MATH 20D ✓"},
+  "ECE 100":  {t:"Linear Electronic Systems", u:4, d:4, q:"F S", p:"MATH 20D ✓, ECE 45 ✓, ECE 65 (may be concurrent with dept approval)"},
+  "ECE 101":  {t:"Linear Systems Fundamentals", u:4, d:4, q:"FWS", p:"ECE 45 ✓ — that is the whole prerequisite"},
+  "ECE 102":  {t:"Introduction to Active Circuit Design", u:4, d:4, q:"FW ", p:"ECE 65 and ECE 100 (100 may be concurrent with dept approval)"},
+  "ECE 103":  {t:"Fundamentals of Devices & Materials", u:4, d:3, q:"FWS", p:"ECE 65 and PHYS 2D"},
+  "ECE 107":  {t:"Electromagnetism", u:4, d:4, q:"FW ", p:"MATH 20D–E ✓, PHYS 2A–C ✓, ECE 45 ✓ — no PHYS 2D needed"},
+  "ECE 108":  {t:"Digital Circuits", u:4, d:3, q:"F S", p:"ECE 45 ✓, ECE 25 ✓, ECE 30 ✓"},
+  "ECE 109":  {t:"Engineering Probability & Statistics", u:4, d:3, q:"FWS", p:"MATH 18 ✓, MATH 20A–C ✓"},
+  "ECE 111":  {t:"Advanced Digital Design Project", u:4, d:3, q:"FWS", p:"ECE 25 ✓"},
+  "ECE 115":  {t:"Fast Prototyping", u:4, d:3, q:" WS", p:"ECE 65"},
+  "ECE 116":  {t:"Advanced Hardware & Software Design", u:4, d:3, q:"F  ", p:"ECE 15 ✓, ECE 5 ✓ and ECE 18"},
+  "ECE 121A": {t:"Power Systems Analysis & Fundamentals", u:4, d:3, q:"F  ", p:"ECE 35 ✓"},
+  "ECE 121B": {t:"Energy Conversion", u:4, d:3, q:" W ", p:"ECE 121A"},
+  "ECE 125A": {t:"Power Electronics I", u:4, d:4, q:" W ", p:"ECE 121A"},
+  "ECE 125B": {t:"Power Electronics II", u:4, d:4, q:"  S", p:"ECE 125A"},
+  "ECE 128A": {t:"Real World Power Grid Operation", u:4, d:2, q:"F  ", p:"Upper-division standing ✓"},
+  "ECE 128B": {t:"Power Grid Modernization", u:4, d:3, q:" W ", p:"Upper-division standing ✓ — substitutes for ECE 125B"},
+  "ECE 135A": {t:"Semiconductor Physics", u:4, d:4, q:"F  ", p:"ECE 103 (C– or better)"},
+  "ECE 135B": {t:"Electronic Devices", u:4, d:4, q:" W ", p:"ECE 135A (C– or better)"},
+  "ECE 136L": {t:"Microelectronics Laboratory", u:4, d:5, q:"  S", p:"ECE 135B — cleanroom fabrication"},
+  "ECE 140A": {t:"The Art of Product Engineering I", u:4, d:2, q:" W ", p:"ECE 15 ✓"},
+  "ECE 140B": {t:"The Art of Product Engineering II", u:4, d:3, q:"  S", p:"ECE 140A"},
+  "ECE 141A": {t:"Software Foundations I", u:4, d:3, q:" W ", p:"ECE 17 and ECE 30 ✓"},
+  "ECE 141B": {t:"Software Foundations II", u:4, d:3, q:"  S", p:"ECE 141A"},
+  "ECE 148":  {t:"Introduction to Autonomous Vehicles", u:4, d:3, q:"FWS", p:"ECE 15 ✓ or ECE 35 ✓ — plus consent of instructor"},
+  "ECE 153":  {t:"Probability & Random Processes", u:4, d:4, q:"  S", p:"ECE 109 (C– or better)"},
+  "ECE 155":  {t:"Digital Communications Theory", u:4, d:4, q:"F  ", p:"ECE 101, ECE 109 and ECE 153"},
+  "ECE 157A": {t:"Communications Systems Laboratory I", u:4, d:3, q:"   ", p:"ECE 109 and ECE 161A"},
+  "ECE 158A": {t:"Data Networks I", u:4, d:3, q:"F  ", p:"ECE 109 (C– or better)"},
+  "ECE 158B": {t:"Data Networks II", u:4, d:3, q:" W ", p:"ECE 158A (C– or better)"},
+  "ECE 159":  {t:"Data Processing & Information Theory", u:4, d:4, q:" W ", p:"ECE 153"},
+  "ECE 161A": {t:"Introduction to Digital Signal Processing", u:4, d:4, q:"F  ", p:"ECE 101"},
+  "ECE 161B": {t:"Digital Signal Processing I", u:4, d:3, q:" W ", p:"ECE 161A (C– or better)"},
+  "ECE 161C": {t:"Applications of Digital Signal Processing", u:4, d:3, q:"   ", p:"ECE 161A"},
+  "ECE 164":  {t:"Analog Integrated Circuit Design", u:4, d:5, q:"F  ", p:"ECE 102 (C– or better)"},
+  "ECE 165":  {t:"Digital Integrated Circuit Design", u:4, d:4, q:"  S", p:"ECE 102"},
+  "ECE 166":  {t:"Microwave Systems & Circuits", u:4, d:4, q:"F  ", p:"ECE 102 and ECE 107 (C– or better)"},
+  "ECE 171A": {t:"Linear Control System Theory", u:4, d:3, q:"  S", p:"ECE 45 ✓ — that is the whole prerequisite"},
+  "ECE 171B": {t:"Linear Control System Theory II", u:4, d:4, q:"F  ", p:"ECE 171A (C– or better)"},
+  "ECE 172A": {t:"Introduction to Intelligent Systems", u:4, d:3, q:"  S", p:"ECE 101 (C– or better)"},
+  "ECE 174":  {t:"Linear & Nonlinear Optimization", u:4, d:3, q:"F  ", p:"MATH 18 ✓ and ECE 15 ✓"},
+  "ECE 175A": {t:"Machine Intelligence: Pattern Recognition", u:4, d:3, q:" W ", p:"ECE 109 and ECE 174"},
+  "ECE 175B": {t:"Machine Intelligence: Graphical Models", u:4, d:4, q:"  S", p:"ECE 175A"},
+  "ECE 176":  {t:"Introduction to Deep Learning", u:4, d:3, q:"  S", p:"MATH 18 ✓"},
+  "ECE 181":  {t:"Physical Optics & Fourier Optics", u:4, d:4, q:"F S", p:"ECE 103 and ECE 107 (C– or better)"},
+  "ECE 182":  {t:"Electromagnetic Optics & Fiber Optics", u:4, d:4, q:" W ", p:"ECE 107 (C– or better)"},
+  "ECE 183":  {t:"Optical Electronics", u:4, d:4, q:"  S", p:"ECE 103 and ECE 107 (C– or better)"},
+  "ECE 184":  {t:"Optical Information Processing & Holography", u:4, d:4, q:" W ", p:"ECE 182 (C– or better)"},
+  "COMM 10":  {t:"Introduction to Communication", u:4, d:1, q:"FWS", a:1, p:"None — also clears the DEI requirement"},
+  "COMM 1xx a":{t:"Intermediate COMM elective (101–119)", u:4, d:1, q:"FWS", a:1, p:"COMM 10"},
+  "COMM 1xx b":{t:"Intermediate COMM elective (101–119)", u:4, d:1, q:"FWS", a:1, p:"COMM 10"},
+  "MGT 1xx a":{t:"Rady upper-div elective (MGT 100–199)", u:4, d:2, q:"FWS", a:1, p:"Both professional electives must come from one department"},
+  "MGT 1xx b":{t:"Rady upper-div elective (MGT 100–199)", u:4, d:2, q:"FWS", a:1, p:"COGS 100–199 or ECON 100–199 work equally well"}
 };
 
-const R = { // requirement tags
+const R = {
   LD:"lower div", BR:"breadth", DP:"depth", DS:"design",
   PE:"prof elective", TE:"tech elective", GE:"general ed"
 };
 
 function q(label, sub, list){ return {label, sub, list}; }
 
-/* Each entry: [code, requirement tag] */
 const PLANS = [
 {
-  id:"csd", name:"Computer System Design", rank:1, load:55, finish:"Fall 2027", risk:"lo",
-  headline:"The fastest and the easiest. Take this one unless you actively want analog or power.",
+  id:"mlc", name:"Machine Learning & Controls", rank:1, load:59, finish:"Fall 2027", risk:"lo",
+  headline:"Every required course is on this year's schedule. Nothing depends on a section that doesn't exist yet.",
   why:[
-    "Only <b>four</b> fixed breadth courses, and ECE 107 (Electromagnetism) is not one of them — this is the only depth that lets you skip the hardest course in the breadth set.",
-    "The depth is <b>choose 5 from a list of 11</b>, so you can pick the five with the shallowest prerequisites. No forced chains.",
-    "You never need ECE 102 or ECE 103, which kills the ECE 65 → 100 → 102 bottleneck that slows every other depth.",
-    "Lowest total load of all eight tracks (55 vs. 64 for the worst), because the work is project and software heavy rather than proof heavy."
+    "All ten required major courses — both lower division, all four breadth, all four depth — are offered between Fall 2026 and Spring 2027. <b>You finish the actual major by Spring 2027.</b> Everything after that is electives you get to choose.",
+    "That is the difference that matters. Six of the eight depths depend on at least one course that either isn't offered this year or can't be reached in time. This one doesn't.",
+    "ECE 174 needs only MATH 18 and ECE 15, both done — so you start the depth in your first quarter back.",
+    "Four free upper-division technical electives, the most of any depth, so you control how hard your last two quarters are."
   ],
-  watch:["ECE 116 needs ECE 18, so ECE 18 has to land in Fall 2026.","ECE 140B is your design course and needs ECE 140A first — don't let 140A slip."],
+  watch:[
+    "<b>ECE 174 runs in Fall 2026 and nowhere else this year.</b> If you miss it, ECE 175A in Winter is gone too, and the depth slips a full year. This is the single most important course on your Fall schedule after ECE 65.",
+    "ECE 107 is offered Fall and Winter only — it is not available in Spring. Winter 2027 is your last chance this year.",
+    "ECE 100 skips Winter entirely (Fall and Spring only), which is why it sits in Spring 2027 here."
+  ],
   terms:[
-    q("Fall 2026","Retake quarter. Kept deliberately light around ECE 65.",[["ECE 65",R.LD],["ECE 109",R.BR],["ECE 18",R.LD],["COMM 10",R.GE]]),
-    q("Winter 2027","ECE 65 is behind you, so ECE 100 and 101 unlock together.",[["ECE 100",R.BR],["ECE 101",R.BR],["ECE 111",R.DP],["ECE 140A",R.DP]]),
-    q("Spring 2027","The one five-course quarter. ECE 17 is the light one.",[["ECE 116",R.BR],["ECE 141A",R.DP],["ECE 158A",R.DP],["ECE 140B",R.DS],["ECE 17",R.TE]]),
-    q("Summer 2027","Two courses per session. All non-technical — a real breather.",[["COMM 1xx",R.GE],["AHI UD",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
-    q("Fall 2027","Graduating quarter. Every course here is a free elective choice.",[["ECE 141B",R.TE],["ECE 158B",R.DP],["ECE 171A",R.TE],["ECE 172A",R.TE]])
+    q("Fall 2026","Retake quarter, kept to four. ECE 174 is Fall-only and unlocks the depth.",[["ECE 65",R.LD],["ECE 109",R.BR],["ECE 174",R.DP],["COMM 10",R.GE]]),
+    q("Winter 2027","Five courses, but ECE 140A and the COMM elective are light. Last call for ECE 107.",[["ECE 101",R.BR],["ECE 107",R.BR],["ECE 175A",R.DP],["ECE 140A",R.TE],["COMM 1xx a",R.GE]]),
+    q("Spring 2027","Major requirements finish here. ECE 171A and 175B are both Spring-only.",[["ECE 100",R.BR],["ECE 171A",R.DP],["ECE 175B",R.DP],["ECE 17",R.LD]]),
+    q("Summer 2027","Nothing technical. All four are reliably offered in summer.",[["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE],["PHYS 2D",R.TE]]),
+    q("Fall 2027","Graduating quarter — every course here is a free choice you can swap.",[["ECE 111",R.DS],["ECE 158A",R.TE],["ECE 108",R.TE],["ECE 171B",R.TE]])
   ],
-  checks:[["Lower division","ECE 18, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 109, 116","4 of 4"],["Depth (5 of 11)","ECE 111, 140A, 141A, 158A, 158B","5 of 5"],["Design","ECE 140B","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 141B, 171A, 172A","3 of 3"],["UD/LD tech elective","ECE 17 (CHEM 6A ✓ covers the other)","1 of 1"]]
+  checks:[["Lower division","ECE 17, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 107, 109","4 of 4"],["Depth","ECE 171A, 174, 175A + 175B","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 140A, 158A, 108, 171B","4 of 4"],["UD/LD tech elective","PHYS 2D (CHEM 6A ✓ covers the other)","1 of 1"]]
 },
 {
-  id:"mlc", name:"Machine Learning & Controls", rank:2, load:58, finish:"Fall 2027", risk:"lo",
-  headline:"Nearly as fast, and the most useful degree of the eight if you want software or robotics work.",
+  id:"csd", name:"Computer System Design", rank:2, load:56, finish:"Fall 2027", risk:"md",
+  headline:"Lowest workload of the eight, but ECE 116 is a Fall-only breadth course you cannot reach until 2027.",
   why:[
-    "Four breadth courses and a depth whose prerequisites are almost all satisfied <b>today</b> — ECE 174 needs only MATH 18 and ECE 15, both done.",
-    "Four free upper-division technical electives, the most of any depth, so you control the difficulty of your last two quarters.",
-    "The depth chain is only two deep (ECE 174 → 175A → 175B), versus three or four elsewhere.",
-    "Costs you ECE 107, which is the reason this sits behind Computer System Design rather than ahead of it."
+    "Lightest total load (56), because the depth is choose-five-from-eleven and the work is project and software heavy rather than proof heavy.",
+    "You never need ECE 107, ECE 102 or ECE 103 — this is the only depth that skips all three of the hardest breadth courses.",
+    "The catch: <b>ECE 116 is a required breadth course, offered Fall only, and its prerequisite ECE 18 is also Fall-26 only.</b> You cannot take both in the same quarter, so ECE 116 has to wait for Fall 2027.",
+    "That makes your graduation depend on one course being offered again next year. It ran this Fall, so it probably will — but there is no substitute if it doesn't."
   ],
-  watch:["ECE 175A needs both ECE 109 and ECE 174 — that is why both go in Fall 2026.","ECE 107 has a reputation as the hardest breadth course; it is alone with lighter courses in Spring 2027 on purpose."],
+  watch:[
+    "<b>ECE 18 must be taken in Fall 2026.</b> It is offered once all year, and ECE 116 is worthless to you without it.",
+    "ECE 17 also belongs in Fall 2026 — ECE 141A is Winter-only and requires it.",
+    "Confirm ECE 116 appears on the 2027-28 tentative list as soon as it is published. If it vanishes, this depth breaks and you would switch to Machine Learning & Controls."
+  ],
   terms:[
-    q("Fall 2026","ECE 174 and 109 need nothing you don't already have.",[["ECE 65",R.LD],["ECE 109",R.BR],["ECE 174",R.DP],["COMM 10",R.GE]]),
-    q("Winter 2027","Heaviest quarter — two 4-load courses back to back.",[["ECE 100",R.BR],["ECE 101",R.BR],["ECE 175A",R.DP],["ECE 18",R.LD]]),
-    q("Spring 2027","Five courses, but ECE 140A and PHYS 2D are the easy pair.",[["ECE 107",R.BR],["ECE 171A",R.DP],["ECE 172A",R.DP],["ECE 140A",R.TE],["PHYS 2D",R.TE]]),
-    q("Summer 2027","All GE and professional electives — reliably offered in summer.",[["COMM 1xx",R.GE],["AHI UD",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
-    q("Fall 2027","Graduating quarter.",[["ECE 111",R.DS],["ECE 141A",R.TE],["ECE 158A",R.TE],["ECE 175B",R.TE]])
+    q("Fall 2026","Five courses, but ECE 17 and 18 are light. Both are forced into this quarter.",[["ECE 65",R.LD],["ECE 18",R.LD],["ECE 17",R.TE],["ECE 109",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","ECE 140A and 141A are both Winter-only.",[["ECE 101",R.BR],["ECE 140A",R.DP],["ECE 141A",R.DP],["ECE 111",R.DP]]),
+    q("Spring 2027","All four are Spring-only or Spring-last-chance.",[["ECE 100",R.BR],["ECE 140B",R.DS],["ECE 141B",R.DP],["ECE 115",R.TE]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","ECE 116 lands here — the one course this plan is betting on.",[["ECE 116",R.BR],["ECE 158A",R.DP],["ECE 108",R.TE],["ECE 161A",R.TE]])
   ],
-  checks:[["Lower division","ECE 18, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 107, 109","4 of 4"],["Depth","ECE 171A, 174, 175A + 172A","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 140A, 141A, 158A, 175B","4 of 4"],["UD/LD tech elective","PHYS 2D","1 of 1"]]
+  checks:[["Lower division","ECE 18, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 109, 116","4 of 4"],["Depth (5 of 11)","ECE 111, 140A, 141A, 141B, 158A","5 of 5"],["Design","ECE 140B","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 115, 108, 161A","3 of 3"],["UD/LD tech elective","ECE 17","1 of 1"]]
 },
 {
-  id:"sip", name:"Signal & Image Processing", rank:3, load:60, finish:"Fall 2027", risk:"md",
-  headline:"Same four-course breadth as ML, but the 161A→B→C chain is the schedule risk of the whole set.",
+  id:"pwr", name:"Power Engineering", rank:3, load:60, finish:"Fall 2027", risk:"md",
+  headline:"The whole depth is available this year — but the offering pattern is one shot per course, no second chances.",
   why:[
-    "Only four breadth courses, and four free technical electives at the end.",
-    "The catch: ECE 161A, 161B and 161C are a three-course family, and 161A appears to run mainly in Fall. This plan assumes a Winter 2027 161A section and both 161B and 161C in Spring 2027.",
-    "It also forces ECE 101 into Fall 2026 alongside your ECE 65 retake, which is the single most aggressive move in any of these plans."
+    "All five depth courses run in 2026-27: ECE 121A and 128A in Fall, 121B and 125A in Winter, 125B in Spring. <b>Your depth is finished by Spring 2027.</b>",
+    "ECE 121A needs only ECE 35 and ECE 128A needs only upper-division standing, so you start the depth immediately while retaking ECE 65.",
+    "The cost is six fixed breadth courses and only one free technical elective — almost no room to dodge a hard course.",
+    "ECE 102 has to wait for Fall 2027 because it requires ECE 100, and ECE 100 doesn't run in Winter."
   ],
-  watch:["<b>Confirm ECE 161A runs Winter 2027 before you commit.</b> If it is Fall-only, this depth slips to Spring 2028.","Confirm 161B and 161C can both be taken in Spring — they only require 161A, so it is legal, but both must actually be scheduled.","ECE 101 concurrent with the ECE 65 retake is allowed by the catalog but is a real load in a quarter you cannot afford to repeat."],
+  watch:[
+    "<b>Every depth course is offered exactly once this year.</b> Miss ECE 121A in Fall and 121B, 125A and 125B all fall over behind it — that is a twelve-month delay.",
+    "ECE 128B (Winter) is an approved substitute for ECE 125B (Spring) if Spring gets too heavy.",
+    "Winter 2027 is load 15 and Spring is 14. This plan front-loads pain into the middle."
+  ],
   terms:[
-    q("Fall 2026","ECE 101 rides alongside the ECE 65 retake — catalog allows it.",[["ECE 65",R.LD],["ECE 101",R.BR],["ECE 109",R.BR],["COMM 10",R.GE]]),
-    q("Winter 2027","The pivot quarter. Everything downstream needs 161A here.",[["ECE 100",R.BR],["ECE 161A",R.DP],["ECE 153",R.DP],["ECE 18",R.LD]]),
-    q("Spring 2027","Both DSP follow-ons at once.",[["ECE 107",R.BR],["ECE 161B",R.DP],["ECE 161C",R.DP],["ECE 111",R.DS]]),
-    q("Summer 2027","GE and professional electives.",[["COMM 1xx",R.GE],["AHI UD",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
-    q("Fall 2027","Five free electives to close it out.",[["ECE 158A",R.TE],["ECE 171A",R.TE],["ECE 172A",R.TE],["ECE 174",R.TE],["PHYS 2D",R.TE]])
+    q("Fall 2026","Start the depth now — both courses need only what you already have.",[["ECE 65",R.LD],["PHYS 2D",R.LD],["ECE 121A",R.DP],["ECE 128A",R.DP],["COMM 10",R.GE]]),
+    q("Winter 2027","Hardest quarter. Both power courses are Winter-only.",[["ECE 101",R.BR],["ECE 107",R.BR],["ECE 121B",R.DP],["ECE 125A",R.DP]]),
+    q("Spring 2027","Depth closes out. ECE 125B is Spring-only.",[["ECE 100",R.BR],["ECE 125B",R.DP],["ECE 103",R.BR],["ECE 109",R.BR]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","ECE 102 finally unlocks now that ECE 100 is done.",[["ECE 102",R.BR],["ECE 111",R.DS],["ECE 108",R.TE],["ECE 17",R.TE]])
   ],
-  checks:[["Lower division","ECE 18, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 107, 109","4 of 4"],["Depth","ECE 153, 161A, 161B, 161C","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 158A, 171A, 172A, 174","4 of 4"],["UD/LD tech elective","PHYS 2D","1 of 1"]]
+  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 103, 107, 109","6 of 6"],["Depth","ECE 121A, 121B, 125A, 128A, 125B","5 of 5"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech elective","ECE 108","1 of 1"],["UD/LD tech elective","ECE 17","1 of 1"]]
 },
 {
-  id:"pwr", name:"Power Engineering", rank:4, load:60, finish:"Fall 2027", risk:"md",
-  headline:"The gentlest Fall 2026 of any track, paid for by a rigid once-a-year offering chain later.",
+  id:"ecs", name:"Electronic Circuits & Systems", rank:4, load:63, finish:"Fall 2027 — only with a concurrency exception", risk:"hi",
+  headline:"Finishing in 2027 requires taking ECE 100 alongside your ECE 65 retake. Otherwise this is Spring 2028.",
   why:[
-    "ECE 121A needs only ECE 35 and ECE 128A needs only upper-division standing, so you can start the depth <b>immediately</b> in Fall 2026 while retaking ECE 65. That gives you the lightest opening quarter of all eight plans.",
-    "Only one free upper-division technical elective, though — six fixed breadth courses plus five fixed depth courses leaves almost no room to dodge a hard course.",
-    "The depth runs on a strict annual cadence: 121A and 128A in Fall, 121B and 125A in Winter, 125B in Spring. Miss one and you wait a full year."
+    "All three depth courses sit behind ECE 102, which sits behind ECE 100, which sits behind ECE 65. That is the longest chain in the major and you are starting at the bottom of it.",
+    "ECE 102 runs Fall and Winter only. To reach it in Winter 2027 you must finish ECE 100 in Fall 2026 — and ECE 100 in Fall 2026 means taking it <b>concurrently with the ECE 65 you just failed</b>, which needs department approval.",
+    "Without that exception: ECE 100 in Spring 2027, ECE 102 in Fall 2027, ECE 165 in Spring 2028. <b>Graduation moves to Spring 2028.</b>",
+    "ECE 164 is also the single heaviest course in the catalog, and it lands in your final quarter next to ECE 166."
   ],
-  watch:["Miss ECE 121A in Fall 2026 and the entire depth slides twelve months.","The middle of this plan is where you pay: Winter 2027 lands at load 15 and Spring 2027 at load 16."],
+  watch:[
+    "<b>This is the one plan that asks you to overload the quarter you can least afford to.</b> Given the ECE 65 result, think hard before committing.",
+    "ECE 164 and ECE 166 are Fall-only and both require ECE 102 — they cannot happen before Fall 2027 under any ordering.",
+    "Fall 2026 at load 15 and Winter 2027 at load 15 back to back is brutal."
+  ],
   terms:[
-    q("Fall 2026","Lightest opening quarter of any depth — load 10.",[["ECE 65",R.LD],["ECE 121A",R.DP],["ECE 128A",R.DP],["COMM 10",R.GE]]),
-    q("Winter 2027","Hard. Two breadth plus two power courses.",[["ECE 100",R.BR],["ECE 101",R.BR],["ECE 121B",R.DP],["ECE 125A",R.DP]]),
-    q("Spring 2027","Five courses; ECE 17 and PHYS 2D are the relief.",[["ECE 102",R.BR],["ECE 125B",R.DP],["ECE 109",R.BR],["PHYS 2D",R.LD],["ECE 17",R.TE]]),
-    q("Summer 2027","GE and professional electives.",[["COMM 1xx",R.GE],["AHI UD",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
-    q("Fall 2027","Close out breadth and the design course.",[["ECE 103",R.BR],["ECE 107",R.BR],["ECE 111",R.DS],["ECE 171A",R.TE]])
+    q("Fall 2026","Load 15. ECE 100 concurrent with ECE 65 requires department approval.",[["ECE 65",R.LD],["ECE 100",R.BR],["PHYS 2D",R.LD],["ECE 109",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","ECE 102 is the gate to the whole depth. Last chance for ECE 107.",[["ECE 102",R.BR],["ECE 101",R.BR],["ECE 107",R.BR],["ECE 103",R.BR]]),
+    q("Spring 2027","ECE 165 is Spring-only and needs ECE 102 behind it.",[["ECE 165",R.DP],["ECE 111",R.DS],["ECE 115",R.TE],["ECE 17",R.TE]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","Load 15 — the two remaining depth courses are both Fall-only.",[["ECE 164",R.DP],["ECE 166",R.DP],["ECE 158A",R.TE],["ECE 108",R.TE]])
   ],
-  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 103, 107, 109","6 of 6"],["Depth","ECE 121A, 121B, 125A, 128A, 125B","5 of 5"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech elective","ECE 171A","1 of 1"],["UD/LD tech elective","ECE 17","1 of 1"]]
+  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 103, 107, 109","6 of 6"],["Depth","ECE 164, 165, 166","3 of 3"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 115, 158A, 108","3 of 3"],["UD/LD tech elective","ECE 17","1 of 1"]]
 },
 {
-  id:"pho", name:"Photonics", rank:5, load:62, finish:"Fall 2027", risk:"hi",
-  headline:"Clean prerequisite structure, but four fixed depth courses that are among the thinnest-offered in the department.",
+  id:"pho", name:"Photonics", rank:5, load:62, finish:"Winter 2028", risk:"md",
+  headline:"Costs you an extra quarter, purely because ECE 184 and its prerequisite ECE 182 are both Winter-only.",
   why:[
-    "Five breadth courses and a fully fixed four-course depth: ECE 181, 182, 183, 184. No substitutions.",
-    "ECE 107 is available to you right now — it needs no ECE 65 and no PHYS 2D — which is why it goes in Fall 2026 and unlocks ECE 182 by Winter.",
-    "The risk is entirely scheduling: all four depth courses are specialist offerings that typically run once a year, and this plan needs them in three consecutive quarters."
+    "ECE 184 requires ECE 182. Both are offered in Winter and only in Winter, so they cannot happen in the same year. ECE 182 in Winter 2027 forces ECE 184 into <b>Winter 2028</b>.",
+    "Everything else is clean: ECE 107 needs nothing you don't have, so it goes in Fall 2026 and unlocks ECE 182 immediately.",
+    "ECE 185 is an approved substitute for ECE 184, but it is Spring-only and needs ECE 183 — that lands Spring 2028, which is worse.",
+    "Spring 2027 is load 17, the heaviest quarter in any of these plans, because ECE 181 and 183 both land there."
   ],
-  watch:["<b>Check all four of 181/182/183/184 against the tentative list before choosing this depth.</b> One missing section costs a year.","Winter 2027 is load 15 with ECE 100, 101, 103 and 182 together."],
+  watch:[
+    "The extra quarter is structural, not fixable by reordering. Only take this depth if you actually want optics.",
+    "ECE 181 runs Fall and Spring — but the Fall section is out of reach because ECE 103 can't be done before Winter."
+  ],
   terms:[
-    q("Fall 2026","ECE 107 early is what makes the rest of this work.",[["ECE 65",R.LD],["PHYS 2D",R.LD],["ECE 107",R.BR],["COMM 10",R.GE]]),
-    q("Winter 2027","Heavy — ECE 182 lands on top of both breadth courses.",[["ECE 100",R.BR],["ECE 101",R.BR],["ECE 103",R.BR],["ECE 182",R.DP]]),
-    q("Spring 2027","Two optics courses at once.",[["ECE 181",R.DP],["ECE 183",R.DP],["ECE 109",R.BR],["ECE 111",R.DS]]),
-    q("Summer 2027","GE and professional electives.",[["COMM 1xx",R.GE],["AHI UD",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
-    q("Fall 2027","Last depth course plus electives.",[["ECE 184",R.DP],["ECE 171A",R.TE],["ECE 172A",R.TE],["ECE 158A",R.TE],["ECE 17",R.TE]])
+    q("Fall 2026","ECE 107 early is what makes the optics sequence work at all.",[["ECE 65",R.LD],["PHYS 2D",R.LD],["ECE 107",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","ECE 182 is Winter-only and gates ECE 184 a year out.",[["ECE 101",R.BR],["ECE 103",R.BR],["ECE 182",R.DP],["ECE 109",R.BR]]),
+    q("Spring 2027","Load 17. Both remaining optics courses land together.",[["ECE 100",R.BR],["ECE 181",R.DP],["ECE 183",R.DP],["ECE 111",R.DS],["ECE 17",R.TE]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","Light quarter — you are waiting on ECE 184.",[["ECE 108",R.TE],["ECE 158A",R.TE]]),
+    q("Winter 2028","The extra quarter. ECE 184 could not have happened sooner.",[["ECE 184",R.DP],["ECE 158B",R.TE]])
   ],
-  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 103, 107, 109","5 of 5"],["Depth","ECE 181, 182, 183, 184","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 171A, 172A, 158A","3 of 3"],["UD/LD tech elective","ECE 17","1 of 1"]]
+  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 103, 107, 109","5 of 5"],["Depth","ECE 181, 182, 183, 184","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 108, 158A, 158B","3 of 3"],["UD/LD tech elective","ECE 17","1 of 1"]]
 },
 {
-  id:"com", name:"Communication Systems", rank:6, load:62, finish:"Fall 2027", risk:"hi",
-  headline:"Eleven fixed courses — five breadth plus six depth. The least flexible depth in the major.",
+  id:"dev", name:"Electronic Devices & Materials", rank:6, load:64, finish:"Spring 2028", risk:"hi",
+  headline:"A four-course chain at one course per year-slot, ending in a cleanroom lab. Two extra quarters.",
   why:[
-    "Six required depth courses is the most of any track, on top of five breadth. That is eleven courses you cannot swap, leaving one free technical elective.",
-    "Two separate chains have to run in parallel: ECE 109 → 153 → 155/159, and ECE 101 → 161A → 157A.",
-    "Spring 2027 comes out at load 17 with four hard technical courses — the hardest single quarter anywhere in this document."
+    "ECE 135A requires ECE 103, and ECE 103 requires both ECE 65 and PHYS 2D — neither of which you have before Fall 2026. ECE 135A is Fall-only, so it cannot happen until <b>Fall 2027</b>.",
+    "From there it is strictly one per quarter: ECE 135B is Winter-only, ECE 136L is Spring-only. That is Winter 2028 and Spring 2028, with nothing else left to take alongside them.",
+    "Highest total load of the eight (64), and ECE 136L is device fabrication in a cleanroom — the largest single time commitment in the undergraduate catalog.",
+    "Your last two quarters are one course each. You would be paying full-time enrollment for a trickle."
   ],
-  watch:["ECE 157A requires ECE 161A, so 161A must be done by Winter 2027 or you graduate a year later.","ECE 101 sits concurrent with the ECE 65 retake in Fall 2026.","Spring 2027 is genuinely brutal. Consider splitting it and finishing Winter 2028 instead."],
+  watch:[
+    "<b>The chain has zero slack.</b> One missed section adds another full year.",
+    "This was my earlier best case for this depth on a wrong prerequisite — I had ECE 135A needing only PHYS 2C–D. The department's own page says ECE 103, which is what pushes it out."
+  ],
   terms:[
-    q("Fall 2026","ECE 101 concurrent with the ECE 65 retake.",[["ECE 65",R.LD],["ECE 101",R.BR],["ECE 109",R.BR],["COMM 10",R.GE]]),
-    q("Winter 2027","161A and 153 both open their chains here.",[["ECE 100",R.BR],["ECE 161A",R.DP],["ECE 153",R.DP],["ECE 18",R.LD]]),
-    q("Spring 2027","Load 17 — the hardest quarter in any of these plans.",[["ECE 102",R.BR],["ECE 107",R.BR],["ECE 155",R.DP],["ECE 158A",R.DP],["ECE 17",R.TE]]),
-    q("Summer 2027","GE and professional electives.",[["COMM 1xx",R.GE],["AHI UD",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
-    q("Fall 2027","Last two depth courses plus design.",[["ECE 157A",R.DP],["ECE 159",R.DP],["ECE 111",R.DS],["ECE 171A",R.TE]])
+    q("Fall 2026","Standard opening.",[["ECE 65",R.LD],["PHYS 2D",R.LD],["ECE 107",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","ECE 103 opens the chain — but ECE 135A won't run again until Fall.",[["ECE 101",R.BR],["ECE 103",R.BR],["ECE 109",R.BR],["ECE 148",R.TE]]),
+    q("Spring 2027","ECE 183 needs 103 and 107, both now done.",[["ECE 100",R.BR],["ECE 183",R.DP],["ECE 111",R.DS],["ECE 17",R.TE]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","ECE 135A at last, plus ECE 102 now that ECE 100 is behind you.",[["ECE 135A",R.DP],["ECE 102",R.BR],["ECE 158A",R.TE]]),
+    q("Winter 2028","One course. ECE 135B is Winter-only.",[["ECE 135B",R.DP]]),
+    q("Spring 2028","One course, and it is the cleanroom lab.",[["ECE 136L",R.DP]])
   ],
-  checks:[["Lower division","ECE 18, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 107, 109","5 of 5"],["Depth","ECE 153, 155, 157A, 158A, 159, 161A","6 of 6"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech elective","ECE 171A","1 of 1"],["UD/LD tech elective","ECE 17","1 of 1"]]
+  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 103, 107, 109","6 of 6"],["Depth","ECE 135A, 135B, 136L, 183","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 148, 158A","2 of 2"],["UD/LD tech elective","ECE 17","1 of 1"]]
 },
 {
-  id:"ecs", name:"Electronic Circuits & Systems", rank:7, load:63, finish:"Fall 2027", risk:"hi",
-  headline:"Only three depth courses, but one of them is ECE 164 — and the whole track runs through ECE 102.",
+  id:"sip", name:"Signal & Image Processing", rank:7, load:58, finish:"Spring 2028 — if ECE 161C comes back", risk:"hi",
+  headline:"ECE 161C is not offered anywhere in 2026-27, and it is a required depth course with no substitute.",
   why:[
-    "Just three depth courses (164, 165, 166) sounds light, but six breadth courses come with it, and the depth sits behind the longest chain in the major: ECE 65 → 100 → 102 → 164/165.",
-    "That chain means nothing in the depth can start before Spring 2027, and 164 and 165 both land in your final quarter.",
-    "ECE 164 (analog IC design) is the single heaviest course in this document. Given the ECE 65 result, this is the track that would hurt most."
+    "<b>ECE 161C does not appear in Fall, Winter or Spring of this year's schedule.</b> The depth requires it. There is no alternative course listed in your audit.",
+    "The rest of the chain is already slow: ECE 161A is Fall-only and requires ECE 101, which you cannot finish before Fall 2026 — so 161A waits until Fall 2027, and ECE 161B (Winter-only) until Winter 2028.",
+    "That leaves ECE 161C for Spring 2028 at the earliest, and only if the department schedules it again. If it stays off the list, this depth is not completable on any timeline you can plan around.",
+    "The workload itself is fine — load 58, second-lowest. The problem is entirely availability."
   ],
-  watch:["Any slip in ECE 100 or ECE 102 pushes 164 and 165 out by a full quarter each.","Fall 2027 is load 17 with both ECE 164 and 165 in the same quarter."],
+  watch:[
+    "<b>Ask the ECE undergraduate office directly whether ECE 161C is coming back.</b> Do not choose this depth on hope.",
+    "If they confirm it, this is a reasonable track. If they don't, Machine Learning & Controls uses many of the same courses and is fully available."
+  ],
   terms:[
-    q("Fall 2026","Light on purpose — the chain doesn't start until ECE 65 clears.",[["ECE 65",R.LD],["PHYS 2D",R.LD],["ECE 109",R.BR],["COMM 10",R.GE]]),
-    q("Winter 2027","Load 15. ECE 107 and 103 alongside both linear systems courses.",[["ECE 100",R.BR],["ECE 101",R.BR],["ECE 103",R.BR],["ECE 107",R.BR]]),
-    q("Spring 2027","ECE 102 unlocks the depth; ECE 166 rides off 107.",[["ECE 102",R.BR],["ECE 166",R.DP],["ECE 111",R.DS],["ECE 171A",R.TE]]),
-    q("Summer 2027","GE and professional electives.",[["COMM 1xx",R.GE],["AHI UD",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
-    q("Fall 2027","Load 17 — both IC design courses together.",[["ECE 164",R.DP],["ECE 165",R.DP],["ECE 172A",R.TE],["ECE 158A",R.TE],["ECE 17",R.TE]])
+    q("Fall 2026","ECE 101 here is what makes ECE 161A possible in Fall 2027.",[["ECE 65",R.LD],["ECE 101",R.BR],["ECE 109",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","Last chance for ECE 107 this year.",[["ECE 107",R.BR],["ECE 111",R.DS],["ECE 140A",R.TE],["ECE 148",R.TE]]),
+    q("Spring 2027","ECE 153 is Spring-only.",[["ECE 100",R.BR],["ECE 153",R.DP],["ECE 172A",R.TE],["ECE 17",R.LD]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","ECE 161A finally reachable.",[["ECE 161A",R.DP],["ECE 158A",R.TE],["ECE 18",R.TE]]),
+    q("Winter 2028","One course.",[["ECE 161B",R.DP]]),
+    q("Spring 2028","Only if the department brings ECE 161C back.",[["ECE 161C",R.DP]])
   ],
-  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 103, 107, 109","6 of 6"],["Depth","ECE 164, 165, 166","3 of 3"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 171A, 172A, 158A","3 of 3"],["UD/LD tech elective","ECE 17","1 of 1"]]
+  checks:[["Lower division","ECE 17, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 107, 109","4 of 4"],["Depth","ECE 153, 161A, 161B, 161C","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 140A, 148, 172A, 158A","4 of 4"],["UD/LD tech elective","ECE 18","1 of 1"]]
 },
 {
-  id:"dev", name:"Electronic Devices & Materials", rank:8, load:64, finish:"Fall 2027", risk:"hi",
-  headline:"Highest total load of the eight, and ECE 136L is a cleanroom fabrication lab.",
+  id:"com", name:"Communication Systems", rank:8, load:63, finish:"Blocked — ECE 157A not offered", risk:"hi",
+  headline:"ECE 157A is not on the schedule at all this year, and six fixed depth courses leave you nowhere to go.",
   why:[
-    "Six breadth courses plus a fully fixed four-course depth, and the depth is a strict chain: PHYS 2D → 135A → 135B → 136L, one course per quarter with no way to compress it.",
-    "ECE 135A and 135B are documented as not reliably offered every Fall and Winter, so the chain is fragile in exactly the place where a slip is most expensive.",
-    "ECE 136L is device fabrication in a cleanroom — the largest single time commitment in the undergraduate ECE catalog."
+    "<b>Neither ECE 157A nor 157B appears anywhere in 2026-27.</b> ECE 157A is required for this depth and has no substitute in your audit.",
+    "Six required depth courses is the most of any track, and they interlock: ECE 155 needs ECE 153, ECE 159 needs ECE 153, ECE 157A needs ECE 161A. ECE 153 is Spring-only, so ECE 155 and 159 both slip past it.",
+    "Realistically: ECE 153 Spring 2027, ECE 155 and 161A Fall 2027, ECE 159 Winter 2028, ECE 157A unknown. <b>You would be waiting on a course the department is not currently running.</b>",
+    "Do not pick this depth right now."
   ],
-  watch:["<b>The 135A → 135B → 136L chain has zero slack.</b> Any missing section adds a full year.","Good news: ECE 135A needs only PHYS 2C–2D, not ECE 103 — so taking PHYS 2D in Fall 2026 starts the chain a quarter earlier than you'd expect."],
+  watch:[
+    "<b>Treat this as unavailable until the ECE office confirms ECE 157A is returning.</b>",
+    "If communications is genuinely what you want, Machine Learning & Controls shares ECE 109 and 174 and is fully schedulable, and you can use ECE 155, 158A and 161A as technical electives there."
+  ],
   terms:[
-    q("Fall 2026","PHYS 2D here is what starts the 135 chain in Winter.",[["ECE 65",R.LD],["PHYS 2D",R.LD],["ECE 109",R.BR],["COMM 10",R.GE]]),
-    q("Winter 2027","Load 16 — four hard courses, no relief. The depth chain opens here.",[["ECE 100",R.BR],["ECE 101",R.BR],["ECE 135A",R.DP],["ECE 107",R.BR]]),
-    q("Spring 2027","ECE 103 and 135B together.",[["ECE 102",R.BR],["ECE 103",R.BR],["ECE 135B",R.DP],["ECE 111",R.DS]]),
-    q("Summer 2027","GE and professional electives.",[["COMM 1xx",R.GE],["AHI UD",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
-    q("Fall 2027","136L is a fabrication lab — treat it as two courses of work.",[["ECE 136L",R.DP],["ECE 183",R.DP],["ECE 171A",R.TE],["ECE 158A",R.TE],["ECE 17",R.TE]])
+    q("Fall 2026","Standard opening.",[["ECE 65",R.LD],["ECE 101",R.BR],["ECE 109",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","Last chance for ECE 107.",[["ECE 107",R.BR],["ECE 111",R.DS],["ECE 148",R.TE],["PHYS 2D",R.TE]]),
+    q("Spring 2027","ECE 153 is Spring-only and gates two more depth courses.",[["ECE 100",R.BR],["ECE 153",R.DP],["ECE 17",R.LD]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","Three depth courses at once, all Fall-only.",[["ECE 155",R.DP],["ECE 158A",R.DP],["ECE 161A",R.DP],["ECE 102",R.BR]]),
+    q("Winter 2028","ECE 159 is Winter-only. ECE 157A has no date.",[["ECE 159",R.DP],["ECE 157A",R.DP]])
   ],
-  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 103, 107, 109","6 of 6"],["Depth","ECE 135A, 135B, 136L, 183","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 171A, 158A","2 of 2"],["UD/LD tech elective","ECE 17","1 of 1"]]
+  checks:[["Lower division","ECE 17, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 107, 109","5 of 5"],["Depth","ECE 153, 155, 157A, 158A, 159, 161A","6 of 6"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech elective","ECE 148","1 of 1"],["UD/LD tech elective","PHYS 2D","1 of 1"]]
 }
 ];
 
@@ -516,7 +582,28 @@ try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ state =
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
 
 const DIFF = ["","var(--d1)","var(--d2)","var(--d3)","var(--d4)","var(--d5)"];
+const QN = ["Fall 2026","Winter 2027","Spring 2027"];
+
+/* Renders the 2026-27 offering pattern as three F/W/S slots. A course the
+   department is not running this year gets a loud chip instead. */
+function availability(c){
+  const on = [c.q[0] !== " ", c.q[1] !== " ", c.q[2] !== " "];
+  if(!on.some(Boolean)){
+    return `<span class="pill warnp" title="Not on the ECE tentative course list for Fall 26, Winter 27 or Spring 27">not offered 26–27</span>`;
+  }
+  const label = on.map((v,i)=>v?QN[i]:null).filter(Boolean).join(", ");
+  const tip = c.a
+    ? `Assumed offered every quarter — the ECE list does not cover this department`
+    : `Offered ${label}`;
+  const slots = ["F","W","S"].map((L,i)=>
+    `<i class="${on[i]?"on":""}">${L}</i>`).join("");
+  return `<span class="qs${c.a?" est":""}" title="${tip}">${slots}</span>`;
+}
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+// Finish strings carry an optional caveat after an em dash; split so the
+// term itself stays scannable and the caveat sits underneath it.
+const finishMain = p => p.finish.split(" — ")[0];
+const finishNote = p => p.finish.split(" — ")[1] || "";
 const id = s => s.replace(/[^a-z0-9]/gi,"_");
 
 /* Ten segments, each worth two load points, so a 20-load quarter fills the bar. */
@@ -532,11 +619,7 @@ function courseRow(planId, code, tag){
   const c = C[code];
   const checked = state[code] ? " checked" : "";
   const cid = `${planId}_${id(code)}`;
-  const off = c.o === "low"
-    ? `<span class="pill warnp" title="Offered annually or irregularly — verify the term">verify</span>`
-    : c.o === "med"
-      ? `<span class="pill" title="Typically one or two quarters per year">1–2×/yr</span>`
-      : "";
+  const off = availability(c);
   // The input is nested inside the label, so no `for` attribute — adding one
   // makes some browsers fire the toggle twice when you click the box itself.
   return `<label class="row${checked?" done":""}">
@@ -583,7 +666,7 @@ function planPanel(p){
       </div>
       <div>
         <div class="facts">
-          <div class="fact"><span class="lab">Finishes</span><span class="val">${esc(p.finish)}</span></div>
+          <div class="fact"><span class="lab">Finishes</span><span class="val">${esc(finishMain(p))}</span>${finishNote(p)?`<span class="cn">${esc(finishNote(p))}</span>`:""}</div>
           <div class="fact"><span class="lab">Total load</span><span class="val">${p.load}</span></div>
           <div class="fact"><span class="lab">Courses left</span><span class="val">${total}</span></div>
           <div class="fact"><span class="lab">Units left</span><span class="val">${units}</span></div>
@@ -616,7 +699,7 @@ function comparePanel(){
       <td class="num">${p.load}</td>
       <td class="num">${fixed}</td>
       <td class="num">${free}</td>
-      <td>${esc(p.finish)}</td>
+      <td>${esc(finishMain(p))}${finishNote(p)?`<br><span class="rank">${esc(finishNote(p))}</span>`:""}</td>
       <td><span class="tag ${p.risk}">${{lo:"low",md:"medium",hi:"high"}[p.risk]}</span></td>
       <td class="verdict">${esc(p.headline)}</td>
     </tr>`;
@@ -626,10 +709,10 @@ function comparePanel(){
     <div class="lede">
       <div class="card">
         <div class="eyebrow">The finding that drives everything</div>
-        <h2>All eight depths need exactly 18 more major courses</h2>
-        <p>Your audit lists seven requirement blocks per depth, and every one of the eight adds up to the same 18 remaining courses. Choosing a depth cannot make the degree shorter. What it changes is <b>how hard those 18 courses are</b> and <b>how badly a missing course section can delay you</b>.</p>
-        <p>Add three general-education courses — COMM 10, one upper-division COMM elective, and one upper-division social science that also clears American History &amp; Institutions — and you have <b>21 courses left</b> on every track.</p>
-        <p>So the plans below all finish in <b>Fall 2027</b>, five terms from now. They are ranked by total difficulty and by how much a scheduling surprise would hurt.</p>
+        <h2>All eight depths need 18 more major courses. Only three of them finish in 2027.</h2>
+        <p>Every depth adds up to the same 18 remaining major courses, plus COMM 10 and two upper-division COMM electives — <b>21 courses either way</b>. Depth choice cannot make the degree shorter.</p>
+        <p>What it does change is whether the courses <b>exist when you need them</b>. Once the real 2026–27 schedule is applied, the eight tracks split hard: three finish Fall 2027, one needs a concurrency exception to do the same, one costs an extra quarter outright, and three run into courses that either aren't offered this year or can't be reached in time.</p>
+        <p>Ranked below by finish date first, then by how much a scheduling surprise would hurt, then by workload.</p>
       </div>
       <div>
         <div class="facts">
@@ -641,12 +724,11 @@ function comparePanel(){
           <div class="fact"><span class="lab">UD units needed</span><span class="val">60</span></div>
         </div>
         <details>
-          <summary>The three moves that save you a whole quarter</summary>
+          <summary>Two moves that lighten every track</summary>
           <div class="dbody">
-            <p><b>COMM 10 clears DEI.</b> It has been on the approved DEI list since Fall 2015, so the course you already planned for Fall 2026 quietly kills a university requirement for free.</p>
-            <p><b>One upper-division course covers AHI and half your area study.</b> Warren's Perspectives of Social Science area study accepts upper-division POLI, USP, ETHN, SOCI, PSYC, ECON and COMM. Several courses on the AHI list — POLI 100A, USP 103, ETHN 121, SOCI 188K — are on both lists at once. Pick one and you satisfy American History &amp; Institutions and an area study course with a single class.</p>
-            <p><b>Both professional electives can come from Rady.</b> The audit allows the pair to come from MGT 100–199 or COGS 100–199 instead of engineering. Two management or cognitive science courses are far lighter than two more ECE courses, and they run in summer.</p>
-            <p>Together those three choices cut roughly a full quarter of work versus the obvious path.</p>
+            <p><b>COMM 10 clears DEI.</b> It has been on the approved DEI list since Fall 2015, so the course you already planned for Fall 2026 kills a university requirement for free — and you need it anyway, since every upper-division COMM course requires it.</p>
+            <p><b>Both professional electives can come from Rady.</b> Your audit allows the pair to come from MGT 100–199 or COGS 100–199 instead of engineering, as long as both come from the same department. Two management courses are far lighter than two more ECE courses, and they run in summer.</p>
+            <p>American History &amp; Institutions is already covered by your high school record, so no course is spent on it. That leaves your GE as pure communication: COMM 20 ✓, COMM 10, and two upper-division COMM electives.</p>
           </div>
         </details>
       </div>
@@ -665,8 +747,8 @@ function comparePanel(){
       <div class="chk"><span class="cl">Summer session 2, 2026</span><span class="cv">PHIL 184 — Philosophy and Film</span><span class="cn">completes the Philosophy area study</span></div>
       <div class="chk"><span class="cl">Fall 2026 · required</span><span class="cv">ECE 65 retake</span><span class="cn">gates ECE 100, 102, 103, 115</span></div>
       <div class="chk"><span class="cl">Fall 2026 · your call</span><span class="cv">COMM 10</span><span class="cn">also clears DEI</span></div>
-      <div class="chk"><span class="cl">Social science area study</span><span class="cv">COMM 20 ✓ + 2 upper division</span><span class="cn">COMM elective + AHI course</span></div>
-      <div class="chk"><span class="cl">Still open</span><span class="cv">American History &amp; Institutions</span><span class="cn">folded into the area study</span></div>
+      <div class="chk"><span class="cl">Social science area study</span><span class="cv">COMM 20 ✓ + 2 upper-div COMM</span><span class="cn">the comm path, as planned</span></div>
+      <div class="chk"><span class="cl">Already cleared</span><span class="cv">American History &amp; Institutions</span><span class="cn">high school record — no course needed</span></div>
       <div class="chk"><span class="cl">Already banked</span><span class="cv">CHEM 6A</span><span class="cn">covers 1 of 2 tech electives</span></div>
     </div>
 
@@ -692,7 +774,7 @@ tabsEl.innerHTML =
    </button>` +
   PLANS.map(p=>`<button class="tab" role="tab" data-target="${p.id}" aria-controls="p-${p.id}" aria-selected="false">
      <span class="tn">${esc(p.name)}</span>
-     <span class="tm">load ${p.load} · ${esc(p.finish)}</span>
+     <span class="tm">load ${p.load} · ${esc(finishMain(p))}${finishNote(p)?"*":""}</span>
    </button>`).join("");
 
 panelsEl.innerHTML = comparePanel() + PLANS.map(planPanel).join("");

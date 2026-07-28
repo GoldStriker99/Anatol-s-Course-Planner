@@ -8,31 +8,35 @@ you tick on one track shows as done on all of them.
 
 ## The core finding
 
-All eight depths require **exactly 18 more major courses**. Picking a depth cannot shorten the degree — it only
-changes how hard those 18 courses are and how badly a missing course section can delay you. Adding three GE courses
-(COMM 10, one upper-division COMM elective, and one upper-division social science that also clears AHI) gives
-**21 courses left** on every track, all finishing **Fall 2027**.
+All eight depths require **exactly 18 more major courses**, plus COMM 10 and two upper-division COMM electives —
+**21 courses either way**. Depth choice cannot shorten the degree. What it changes is whether the courses *exist
+when you need them*.
 
-Depths are ranked by total difficulty load:
+Once the real 2026-27 ECE schedule is applied, the eight tracks split hard. Two required depth courses —
+**ECE 157A and ECE 161C — are not offered anywhere in 2026-27**, which blocks Communication Systems and
+Signal & Image Processing outright.
 
-| # | Depth | Load | Fixed | Free | Risk |
-|---|-------|------|-------|------|------|
-| 1 | Computer System Design | 55 | 12 | 6 | low |
-| 2 | Machine Learning & Controls | 58 | 11 | 7 | low |
-| 3 | Signal & Image Processing | 60 | 11 | 7 | medium |
-| 4 | Power Engineering | 60 | 14 | 4 | medium |
-| 5 | Photonics | 62 | 12 | 6 | high |
-| 6 | Communication Systems | 62 | 14 | 4 | high |
-| 7 | Electronic Circuits & Systems | 63 | 12 | 6 | high |
-| 8 | Electronic Devices & Materials | 64 | 13 | 5 | high |
+| # | Depth | Load | Fixed | Free | Finishes | Risk |
+|---|-------|------|-------|------|----------|------|
+| 1 | Machine Learning & Controls | 59 | 11 | 7 | Fall 2027 | low |
+| 2 | Computer System Design | 56 | 12 | 6 | Fall 2027 | medium |
+| 3 | Power Engineering | 60 | 14 | 4 | Fall 2027 | medium |
+| 4 | Electronic Circuits & Systems | 63 | 12 | 6 | Fall 2027 (needs a concurrency exception) | high |
+| 5 | Photonics | 62 | 12 | 6 | Winter 2028 | medium |
+| 6 | Electronic Devices & Materials | 64 | 13 | 5 | Spring 2028 | high |
+| 7 | Signal & Image Processing | 58 | 11 | 7 | Spring 2028, only if ECE 161C returns | high |
+| 8 | Communication Systems | 63 | 14 | 4 | Blocked — ECE 157A not offered | high |
+
+Machine Learning & Controls wins because all ten of its required major courses run between Fall 2026 and
+Spring 2027 — the major itself is finished by Spring, and everything after is electives you choose.
 
 ## Fixed constraints built into every plan
 
 - **PHIL 184** in summer session 2, 2026 — completes the Philosophy area study
 - **ECE 65 retake** in Fall 2026 — gates ECE 100, 102, 103 and 115
 - **COMM 10** in Fall 2026 — also clears the DEI requirement
-- Social science area study finished with an upper-division COMM elective plus one course that
-  doubles as American History & Institutions
+- Social science area study finished with two upper-division COMM electives (COMM 20 already done)
+- American History & Institutions already satisfied by high school record — no course spent on it
 
 ## Known limitation
 
