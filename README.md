@@ -38,16 +38,23 @@ Spring 2027 — the major itself is finished by Spring, and everything after is 
 - Social science area study finished with two upper-division COMM electives (COMM 20 already done)
 - American History & Institutions already satisfied by high school record — no course spent on it
 
+## Data sources
+
+Course offerings come from the **ECE Tentative Course List 2026-27** and prerequisites from the **ECE Course
+Prerequisites** page, both supplied directly. Each course row shows its real Fall/Winter/Spring availability; a
+hollow outline marks a non-ECE course whose availability is assumed rather than read. A build-time validator
+(`scripts/validate.mjs` equivalent, run in Chromium) asserts that every plan has 21 courses, that each declared
+load matches its computed load, that each requirement checklist sums to 18, and that no course is ever scheduled
+in a quarter it isn't offered.
+
+Anything placed in Fall 2027 or later assumes next year's pattern matches this year's. Summer 2027 is TBD for
+every ECE course, so only COMM, Rady and physics courses are scheduled there.
+
 ## Known limitation
 
-Quarter-by-quarter **course offerings are inferred**, not read live. The build environment could not reach
-`ucsd.edu`, so offering patterns come from the ECE department's published degree plans, syllabi and prerequisite
-pages. Prerequisites, requirement counts and unit totals are taken from the 07/28/2026 degree audit and the UCSD
-catalog and are reliable; the open variable is which quarter each course actually runs. Courses flagged `verify`
-in the UI are the ones where a wrong assumption costs a quarter — check them against the
-[ECE tentative course list](https://www.ece.ucsd.edu/ece-tentative-course-list) and WebReg before registering.
-
 Difficulty ratings (1–5) are structural judgments — lab + lecture, heavy math, cleanroom or capstone project,
-lecture-only GE — not scraped CAPE/SET statistics, which were also unreachable.
+lecture-only GE — **not** grade statistics. The [SunSET](https://github.com/SheepTester/ucsd-sunset) dataset lives
+in a Google Sheet the build environment cannot reach (`docs.google.com` is blocked by egress policy), so no real
+grade distributions are folded in yet.
 
 Not an official record. Confirm with ECE Undergraduate Student Affairs and Warren Academic Advising.
