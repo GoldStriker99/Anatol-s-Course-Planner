@@ -1,0 +1,847 @@
+<title>EE Degree Plan — 8 Depth Tracks</title>
+
+<style>
+:root{
+  --bg:#EAEDF0; --surface:#FFFFFF; --surface-2:#F3F5F8; --surface-3:#E7ECF1;
+  --line:#CFD8E0; --line-strong:#A9B7C4;
+  --text:#16212C; --text-2:#53616F; --text-3:#7C8A98;
+  --accent:#1B4F7E; --accent-ink:#FFFFFF; --accent-soft:#DFEAF4;
+  --copper:#A75F26; --copper-soft:#F6E7D8;
+  --ok:#2F6B4F; --warn:#8C6210; --crit:#9B3A2E;
+  --ok-soft:#DCEBE2; --warn-soft:#F6E9D4; --crit-soft:#F5DEDA;
+  --d1:#3F7D58; --d2:#6E8A3C; --d3:#A07C1E; --d4:#B0602A; --d5:#9B3A2E;
+  --shadow:0 1px 2px rgba(20,35,50,.06), 0 6px 20px -12px rgba(20,35,50,.30);
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,"Cascadia Mono",Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0B131B; --surface:#121C26; --surface-2:#17232F; --surface-3:#1D2B38;
+    --line:#24333F; --line-strong:#3A4B59;
+    --text:#E4EAEF; --text-2:#9DAAB6; --text-3:#6E7D8A;
+    --accent:#6BA8DC; --accent-ink:#0B131B; --accent-soft:#17293A;
+    --copper:#D08A4A; --copper-soft:#2A1F16;
+    --ok:#5FA57F; --warn:#D0A24A; --crit:#D97A66;
+    --ok-soft:#16281F; --warn-soft:#2B2313; --crit-soft:#2E1A16;
+    --d1:#5FA57F; --d2:#8CA85C; --d3:#C9A245; --d4:#D2854C; --d5:#D97A66;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B131B; --surface:#121C26; --surface-2:#17232F; --surface-3:#1D2B38;
+  --line:#24333F; --line-strong:#3A4B59;
+  --text:#E4EAEF; --text-2:#9DAAB6; --text-3:#6E7D8A;
+  --accent:#6BA8DC; --accent-ink:#0B131B; --accent-soft:#17293A;
+  --copper:#D08A4A; --copper-soft:#2A1F16;
+  --ok:#5FA57F; --warn:#D0A24A; --crit:#D97A66;
+  --ok-soft:#16281F; --warn-soft:#2B2313; --crit-soft:#2E1A16;
+  --d1:#5FA57F; --d2:#8CA85C; --d3:#C9A245; --d4:#D2854C; --d5:#D97A66;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -14px rgba(0,0,0,.8);
+}
+:root[data-theme="light"]{
+  --bg:#EAEDF0; --surface:#FFFFFF; --surface-2:#F3F5F8; --surface-3:#E7ECF1;
+  --line:#CFD8E0; --line-strong:#A9B7C4;
+  --text:#16212C; --text-2:#53616F; --text-3:#7C8A98;
+  --accent:#1B4F7E; --accent-ink:#FFFFFF; --accent-soft:#DFEAF4;
+  --copper:#A75F26; --copper-soft:#F6E7D8;
+  --ok:#2F6B4F; --warn:#8C6210; --crit:#9B3A2E;
+  --ok-soft:#DCEBE2; --warn-soft:#F6E9D4; --crit-soft:#F5DEDA;
+  --d1:#3F7D58; --d2:#6E8A3C; --d3:#A07C1E; --d4:#B0602A; --d5:#9B3A2E;
+  --shadow:0 1px 2px rgba(20,35,50,.06), 0 6px 20px -12px rgba(20,35,50,.30);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:var(--sans); font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1140px; margin:0 auto; padding:0 20px}
+h1,h2,h3,h4{text-wrap:balance; margin:0}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--copper); outline-offset:2px; border-radius:4px}
+
+/* ---------- masthead ---------- */
+.mast{
+  background:var(--surface); border-bottom:1px solid var(--line);
+  position:sticky; top:0; z-index:40;
+}
+.mast-in{display:flex; flex-wrap:wrap; align-items:center; gap:18px; padding:14px 20px; max-width:1140px; margin:0 auto}
+.mark{display:flex; flex-direction:column; gap:2px; margin-right:auto}
+.mark .kicker{
+  font-family:var(--mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--copper); font-weight:600;
+}
+.mark h1{font-size:19px; font-weight:640; letter-spacing:-.015em}
+
+.meters{display:flex; gap:10px; flex-wrap:wrap}
+.meter{
+  background:var(--surface-2); border:1px solid var(--line); border-radius:var(--r);
+  padding:7px 11px; min-width:104px;
+}
+.meter .lab{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--text-3); display:block;
+}
+.meter .val{display:block; font-family:var(--mono); font-size:16px; font-weight:600; font-variant-numeric:tabular-nums; line-height:1.3}
+.meter .val small{font-size:11px; color:var(--text-3); font-weight:500}
+.bar{display:block; height:3px; background:var(--line); border-radius:2px; margin-top:5px; overflow:hidden}
+.bar i{display:block; height:100%; background:var(--accent); border-radius:2px; transition:width .3s ease}
+
+.ghost{
+  font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  background:transparent; border:1px solid var(--line-strong); color:var(--text-2);
+  padding:7px 12px; border-radius:var(--r); cursor:pointer;
+}
+.ghost:hover{border-color:var(--copper); color:var(--copper)}
+
+/* ---------- notice ---------- */
+.notice{
+  border:1px solid var(--line); border-left:3px solid var(--copper);
+  background:var(--surface); border-radius:var(--r);
+  padding:14px 16px; margin:22px 0; box-shadow:var(--shadow);
+}
+.notice h3{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--copper); margin-bottom:6px;
+}
+.notice p{margin:0 0 8px; color:var(--text-2); font-size:13.5px; max-width:76ch}
+.notice p:last-child{margin-bottom:0}
+
+/* ---------- tabs ---------- */
+.tabrail{position:sticky; top:63px; z-index:30; background:var(--bg); padding:14px 0 10px; border-bottom:1px solid var(--line)}
+.tabs{display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width:thin}
+.tab{
+  flex:0 0 auto; background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--r); padding:8px 13px; cursor:pointer; text-align:left;
+  color:var(--text-2); font-family:var(--sans); font-size:13px; line-height:1.3;
+  display:flex; flex-direction:column; gap:3px; min-width:0; transition:border-color .15s, color .15s;
+}
+.tab:hover{border-color:var(--line-strong); color:var(--text)}
+.tab .tn{font-weight:600; white-space:nowrap}
+.tab .tm{font-family:var(--mono); font-size:10px; letter-spacing:.06em; color:var(--text-3); white-space:nowrap}
+.tab[aria-selected="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.tab[aria-selected="true"] .tm{color:var(--accent-ink); opacity:.75}
+
+/* ---------- panels ---------- */
+.panel{padding:26px 0 60px}
+.panel[hidden]{display:none}
+
+.lede{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:18px; margin-bottom:26px}
+@media (max-width:800px){.lede{grid-template-columns:1fr}}
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  padding:18px 20px; box-shadow:var(--shadow);
+}
+.eyebrow{
+  font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--text-3); margin-bottom:8px;
+}
+.card h2{font-size:22px; font-weight:640; letter-spacing:-.02em; margin-bottom:8px}
+.card p{margin:0 0 10px; color:var(--text-2); font-size:14px; max-width:66ch}
+.card p:last-child{margin-bottom:0}
+.card ul{margin:0; padding-left:18px; color:var(--text-2); font-size:13.5px}
+.card li{margin-bottom:5px}
+.card li:last-child{margin-bottom:0}
+
+.facts{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--r); overflow:hidden}
+.fact{background:var(--surface); padding:12px 14px}
+.fact .lab{font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--text-3); display:block; margin-bottom:3px}
+.fact .val{font-family:var(--mono); font-size:15px; font-weight:600; font-variant-numeric:tabular-nums}
+
+/* ---------- terms ---------- */
+.sechead{
+  display:flex; align-items:baseline; gap:12px; margin:30px 0 14px;
+  border-bottom:1px solid var(--line); padding-bottom:8px;
+}
+.sechead h3{font-size:13px; font-family:var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--text-2); font-weight:600}
+.sechead span{font-size:12.5px; color:var(--text-3)}
+
+.terms{display:flex; flex-direction:column; gap:14px}
+.term{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden}
+.term-hd{display:flex; align-items:center; gap:14px; padding:12px 16px; background:var(--surface-2); border-bottom:1px solid var(--line); flex-wrap:wrap}
+.term-hd .tl{font-family:var(--mono); font-size:13px; font-weight:600; letter-spacing:.05em; text-transform:uppercase}
+.term-hd .tsub{font-size:12.5px; color:var(--text-3); margin-right:auto}
+.loadchip{display:flex; align-items:center; gap:7px}
+.loadchip .ll{font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--text-3)}
+.segs{display:flex; gap:2px}
+.segs i{width:7px; height:14px; border-radius:1.5px; background:var(--line)}
+.segs i.on{background:var(--sev)}
+.termcount{font-family:var(--mono); font-size:11.5px; color:var(--text-3); font-variant-numeric:tabular-nums}
+
+.row{display:grid; grid-template-columns:26px 92px minmax(0,1fr) auto; gap:12px; align-items:start; padding:11px 16px; border-top:1px solid var(--line)}
+.row:first-of-type{border-top:none}
+@media (max-width:680px){
+  .row{grid-template-columns:24px minmax(0,1fr); gap:8px 10px}
+  .row .code{grid-column:2}
+  .row .body{grid-column:2}
+  .row .meta{grid-column:2; justify-self:start}
+}
+.row input[type=checkbox]{width:17px; height:17px; margin:3px 0 0; accent-color:var(--accent); cursor:pointer}
+.code{font-family:var(--mono); font-size:12.5px; font-weight:600; letter-spacing:.02em; padding-top:2px; white-space:nowrap}
+.body{display:block; min-width:0}
+.body .ttl{display:block; font-size:14px; line-height:1.4}
+.body .sub{display:block; font-size:12px; color:var(--text-3); margin-top:3px; line-height:1.45}
+.body .sub b{color:var(--text-2); font-weight:600}
+.meta{display:flex; align-items:center; gap:7px; padding-top:2px}
+.pill{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase;
+  padding:3px 7px; border-radius:20px; border:1px solid var(--line-strong); color:var(--text-3); white-space:nowrap;
+}
+.pill.req{background:var(--accent-soft); border-color:transparent; color:var(--accent)}
+.pill.warnp{background:var(--crit-soft); border-color:transparent; color:var(--crit)}
+/* Offering pattern: three slots for Fall 26 / Winter 27 / Spring 27. */
+.qs{display:flex; gap:2px}
+.qs i{
+  font-family:var(--mono); font-style:normal; font-size:9px; font-weight:600;
+  width:15px; height:15px; line-height:15px; text-align:center; border-radius:3px;
+  background:var(--surface-3); color:var(--text-3);
+}
+.qs i.on{background:var(--accent); color:var(--accent-ink)}
+.qs.est i.on{background:transparent; color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent)}
+.dot{width:9px; height:9px; border-radius:50%; flex:0 0 auto; background:var(--sev)}
+.row.done .body .ttl,.row.done .code{text-decoration:line-through; color:var(--text-3); text-decoration-thickness:1px}
+
+/* ---------- checklist ---------- */
+.checks{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:10px}
+.chk{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:12px 14px}
+.chk .cl{font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--text-3); display:block; margin-bottom:4px}
+.chk .cv{font-size:13.5px; line-height:1.4}
+.chk .cn{font-family:var(--mono); font-size:11.5px; color:var(--text-2); margin-top:4px; font-variant-numeric:tabular-nums}
+
+/* ---------- compare table ---------- */
+.tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--surface); box-shadow:var(--shadow)}
+table{border-collapse:collapse; width:100%; min-width:840px; font-size:13.5px}
+th,td{text-align:left; padding:11px 14px; border-bottom:1px solid var(--line); vertical-align:top}
+thead th{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--text-3); font-weight:600; background:var(--surface-2); position:sticky; top:0;
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr.hi td{background:var(--accent-soft)}
+td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:600}
+.rank{font-family:var(--mono); font-size:11px; color:var(--text-3)}
+.verdict{color:var(--text-2); font-size:12.5px; max-width:34ch}
+
+/* Risk tags need their own tints — the recommended row is already painted with
+   --accent-soft, so a tag using that same value would disappear inside it. */
+.tag{font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:20px; white-space:nowrap; display:inline-block}
+.tag.lo{background:var(--ok-soft); color:var(--ok)}
+.tag.md{background:var(--warn-soft); color:var(--warn)}
+.tag.hi{background:var(--crit-soft); color:var(--crit)}
+
+details{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:0; margin-top:14px}
+summary{padding:12px 16px; cursor:pointer; font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-2)}
+summary:hover{color:var(--copper)}
+details .dbody{padding:0 16px 16px}
+details .dbody p{font-size:13.5px; color:var(--text-2); max-width:74ch; margin:0 0 10px}
+
+.foot{border-top:1px solid var(--line); padding:22px 0 40px; color:var(--text-3); font-size:12.5px}
+.foot p{max-width:80ch; margin:0 0 8px}
+.foot a{color:var(--accent)}
+
+/* The masthead wraps to two or three rows on narrow screens, so a fixed
+   sticky offset for the tab rail would overlap it. Drop sticky instead. */
+@media (max-width:900px){
+  .mast{position:static}
+  .tabrail{position:static}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
+</style>
+
+<header class="mast">
+  <div class="mast-in">
+    <div class="mark">
+      <span class="kicker">UC San Diego · Warren · EC27 · Catalog FA25</span>
+      <h1>Electrical Engineering — Route to Graduation</h1>
+    </div>
+    <div class="meters">
+      <div class="meter">
+        <span class="lab">This track</span>
+        <span class="val" id="m-done">0<small>/21</small></span>
+        <span class="bar"><i id="m-bar" style="width:0%"></i></span>
+      </div>
+      <div class="meter">
+        <span class="lab">Units</span>
+        <span class="val" id="m-units">150<small>/180</small></span>
+        <span class="bar"><i id="m-ubar" style="width:83%"></i></span>
+      </div>
+      <div class="meter">
+        <span class="lab">Upper div</span>
+        <span class="val" id="m-ud">12<small>/60</small></span>
+        <span class="bar"><i id="m-udbar" style="width:20%"></i></span>
+      </div>
+    </div>
+    <button class="ghost" id="reset" type="button">Reset checks</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="notice">
+    <h3>Built on the real 2026–27 schedule</h3>
+    <p>Every ECE course below is placed against the department's own tentative course list for Fall 26 / Winter 27 / Spring 27, and every prerequisite comes from the ECE prerequisites page. The three slots on each row — <span class="qs" style="display:inline-flex;vertical-align:-3px"><i class="on">F</i><i>W</i><i class="on">S</i></span> — show exactly which quarters that course runs. A hollow outline means the course is outside ECE and its availability is assumed, not read.</p>
+    <p><b>Two required depth courses are not being offered at all this year:</b> ECE 157A (Communication Systems) and ECE 161C (Signal &amp; Image Processing). Those two depths are flagged accordingly.</p>
+    <p>Summer 2027 is listed as TBD for every ECE course, so nothing technical is scheduled there — only COMM, Rady and physics courses that reliably run in summer. Anything placed in Fall 2027 or later assumes next year's pattern matches this year's.</p>
+    <p><b>Every course used for a major requirement must be a letter grade, C− or better.</b> No P/NP.</p>
+  </div>
+</div>
+
+<div class="tabrail">
+  <div class="wrap">
+    <div class="tabs" role="tablist" id="tabs"></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <main id="panels"></main>
+
+  <div class="foot">
+    <p><b>How difficulty is scored.</b> Each course carries a 1–5 load rating based on its structure — lab + lecture, heavy proof/math, cleanroom or capstone project, or lecture-only GE. These are <b>not</b> grade statistics: the SunSET dataset lives in a Google Sheet this build could not reach, so no real distributions are folded in yet. Treat the ramp as a considered ranking, not a measurement. A term's load is the sum of its courses; 15+ is a genuinely hard quarter.</p>
+    <p><b>Sources.</b> Your degree audit (07/28/2026) · ECE Tentative Course List 2026–27 · ECE Course Prerequisites · EE Depth Pathways 2026–27 (all three supplied directly) · <a href="https://senate.ucsd.edu/media/513521/dei-list-of-courses.pdf">DEI course list</a> · <a href="https://catalog.ucsd.edu/curric/COMM-ug.html">COMM major requirements</a> · <a href="https://github.com/SheepTester/ucsd-sunset">SunSET grade data</a></p>
+    <p>Checkmarks save in this browser only. Not an official record — confirm with ECE Undergraduate Student Affairs and Warren Academic Advising.</p>
+  </div>
+</div>
+
+<script>
+/* ---------------------------------------------------------------
+   Course library. diff = 1..5 load rating. offer = scheduling
+   confidence: high (runs most quarters) / med (1-2x per year) /
+   low (annual or irregular - must be verified).
+----------------------------------------------------------------*/
+/* ---------------------------------------------------------------
+   Course library.
+   d  = load rating 1..5 (structural: lab+lecture, math depth,
+        cleanroom/capstone, or lecture-only GE)
+   q  = quarters offered in 2026-27, read off the ECE department's
+        tentative course list: F = Fall 26, W = Winter 27, S = Spring 27.
+        "" means the department is not offering it at all this year.
+   a  = true when availability is assumed rather than read from the
+        ECE list (non-ECE courses, which the list does not cover).
+   p  = prerequisites, from the ECE course prerequisites page.
+----------------------------------------------------------------*/
+const C = {
+  "ECE 65":   {t:"Components & Circuits Laboratory", u:4, d:4, q:"FWS", p:"ECE 5 ✓ and ECE 35 ✓ — retake, failed SP26"},
+  "ECE 17":   {t:"Object-Oriented Programming with C++", u:4, d:2, q:"F S", p:"ECE 15 ✓"},
+  "ECE 18":   {t:"Programming in Python", u:4, d:2, q:"F  ", p:"ECE 15 ✓"},
+  "PHYS 2D":  {t:"Physics — Modern Physics", u:4, d:3, q:"FWS", a:1, p:"PHYS 2C ✓, MATH 20D ✓"},
+  "ECE 100":  {t:"Linear Electronic Systems", u:4, d:4, q:"F S", p:"MATH 20D ✓, ECE 45 ✓, ECE 65 (may be concurrent with dept approval)"},
+  "ECE 101":  {t:"Linear Systems Fundamentals", u:4, d:4, q:"FWS", p:"ECE 45 ✓ — that is the whole prerequisite"},
+  "ECE 102":  {t:"Introduction to Active Circuit Design", u:4, d:4, q:"FW ", p:"ECE 65 and ECE 100 (100 may be concurrent with dept approval)"},
+  "ECE 103":  {t:"Fundamentals of Devices & Materials", u:4, d:3, q:"FWS", p:"ECE 65 and PHYS 2D"},
+  "ECE 107":  {t:"Electromagnetism", u:4, d:4, q:"FW ", p:"MATH 20D–E ✓, PHYS 2A–C ✓, ECE 45 ✓ — no PHYS 2D needed"},
+  "ECE 108":  {t:"Digital Circuits", u:4, d:3, q:"F S", p:"ECE 45 ✓, ECE 25 ✓, ECE 30 ✓"},
+  "ECE 109":  {t:"Engineering Probability & Statistics", u:4, d:3, q:"FWS", p:"MATH 18 ✓, MATH 20A–C ✓"},
+  "ECE 111":  {t:"Advanced Digital Design Project", u:4, d:3, q:"FWS", p:"ECE 25 ✓"},
+  "ECE 115":  {t:"Fast Prototyping", u:4, d:3, q:" WS", p:"ECE 65"},
+  "ECE 116":  {t:"Advanced Hardware & Software Design", u:4, d:3, q:"F  ", p:"ECE 15 ✓, ECE 5 ✓ and ECE 18"},
+  "ECE 121A": {t:"Power Systems Analysis & Fundamentals", u:4, d:3, q:"F  ", p:"ECE 35 ✓"},
+  "ECE 121B": {t:"Energy Conversion", u:4, d:3, q:" W ", p:"ECE 121A"},
+  "ECE 125A": {t:"Power Electronics I", u:4, d:4, q:" W ", p:"ECE 121A"},
+  "ECE 125B": {t:"Power Electronics II", u:4, d:4, q:"  S", p:"ECE 125A"},
+  "ECE 128A": {t:"Real World Power Grid Operation", u:4, d:2, q:"F  ", p:"Upper-division standing ✓"},
+  "ECE 128B": {t:"Power Grid Modernization", u:4, d:3, q:" W ", p:"Upper-division standing ✓ — substitutes for ECE 125B"},
+  "ECE 135A": {t:"Semiconductor Physics", u:4, d:4, q:"F  ", p:"ECE 103 (C– or better)"},
+  "ECE 135B": {t:"Electronic Devices", u:4, d:4, q:" W ", p:"ECE 135A (C– or better)"},
+  "ECE 136L": {t:"Microelectronics Laboratory", u:4, d:5, q:"  S", p:"ECE 135B — cleanroom fabrication"},
+  "ECE 140A": {t:"The Art of Product Engineering I", u:4, d:2, q:" W ", p:"ECE 15 ✓"},
+  "ECE 140B": {t:"The Art of Product Engineering II", u:4, d:3, q:"  S", p:"ECE 140A"},
+  "ECE 141A": {t:"Software Foundations I", u:4, d:3, q:" W ", p:"ECE 17 and ECE 30 ✓"},
+  "ECE 141B": {t:"Software Foundations II", u:4, d:3, q:"  S", p:"ECE 141A"},
+  "ECE 148":  {t:"Introduction to Autonomous Vehicles", u:4, d:3, q:"FWS", p:"ECE 15 ✓ or ECE 35 ✓ — plus consent of instructor"},
+  "ECE 153":  {t:"Probability & Random Processes", u:4, d:4, q:"  S", p:"ECE 109 (C– or better)"},
+  "ECE 155":  {t:"Digital Communications Theory", u:4, d:4, q:"F  ", p:"ECE 101, ECE 109 and ECE 153"},
+  "ECE 157A": {t:"Communications Systems Laboratory I", u:4, d:3, q:"   ", p:"ECE 109 and ECE 161A"},
+  "ECE 158A": {t:"Data Networks I", u:4, d:3, q:"F  ", p:"ECE 109 (C– or better)"},
+  "ECE 158B": {t:"Data Networks II", u:4, d:3, q:" W ", p:"ECE 158A (C– or better)"},
+  "ECE 159":  {t:"Data Processing & Information Theory", u:4, d:4, q:" W ", p:"ECE 153"},
+  "ECE 161A": {t:"Introduction to Digital Signal Processing", u:4, d:4, q:"F  ", p:"ECE 101"},
+  "ECE 161B": {t:"Digital Signal Processing I", u:4, d:3, q:" W ", p:"ECE 161A (C– or better)"},
+  "ECE 161C": {t:"Applications of Digital Signal Processing", u:4, d:3, q:"   ", p:"ECE 161A"},
+  "ECE 164":  {t:"Analog Integrated Circuit Design", u:4, d:5, q:"F  ", p:"ECE 102 (C– or better)"},
+  "ECE 165":  {t:"Digital Integrated Circuit Design", u:4, d:4, q:"  S", p:"ECE 102"},
+  "ECE 166":  {t:"Microwave Systems & Circuits", u:4, d:4, q:"F  ", p:"ECE 102 and ECE 107 (C– or better)"},
+  "ECE 171A": {t:"Linear Control System Theory", u:4, d:3, q:"  S", p:"ECE 45 ✓ — that is the whole prerequisite"},
+  "ECE 171B": {t:"Linear Control System Theory II", u:4, d:4, q:"F  ", p:"ECE 171A (C– or better)"},
+  "ECE 172A": {t:"Introduction to Intelligent Systems", u:4, d:3, q:"  S", p:"ECE 101 (C– or better)"},
+  "ECE 174":  {t:"Linear & Nonlinear Optimization", u:4, d:3, q:"F  ", p:"MATH 18 ✓ and ECE 15 ✓"},
+  "ECE 175A": {t:"Machine Intelligence: Pattern Recognition", u:4, d:3, q:" W ", p:"ECE 109 and ECE 174"},
+  "ECE 175B": {t:"Machine Intelligence: Graphical Models", u:4, d:4, q:"  S", p:"ECE 175A"},
+  "ECE 176":  {t:"Introduction to Deep Learning", u:4, d:3, q:"  S", p:"MATH 18 ✓"},
+  "ECE 181":  {t:"Physical Optics & Fourier Optics", u:4, d:4, q:"F S", p:"ECE 103 and ECE 107 (C– or better)"},
+  "ECE 182":  {t:"Electromagnetic Optics & Fiber Optics", u:4, d:4, q:" W ", p:"ECE 107 (C– or better)"},
+  "ECE 183":  {t:"Optical Electronics", u:4, d:4, q:"  S", p:"ECE 103 and ECE 107 (C– or better)"},
+  "ECE 184":  {t:"Optical Information Processing & Holography", u:4, d:4, q:" W ", p:"ECE 182 (C– or better)"},
+  "COMM 10":  {t:"Introduction to Communication", u:4, d:1, q:"FWS", a:1, p:"None — also clears the DEI requirement"},
+  "COMM 1xx a":{t:"Intermediate COMM elective (101–119)", u:4, d:1, q:"FWS", a:1, p:"COMM 10"},
+  "COMM 1xx b":{t:"Intermediate COMM elective (101–119)", u:4, d:1, q:"FWS", a:1, p:"COMM 10"},
+  "MGT 1xx a":{t:"Rady upper-div elective (MGT 100–199)", u:4, d:2, q:"FWS", a:1, p:"Both professional electives must come from one department"},
+  "MGT 1xx b":{t:"Rady upper-div elective (MGT 100–199)", u:4, d:2, q:"FWS", a:1, p:"COGS 100–199 or ECON 100–199 work equally well"}
+};
+
+const R = {
+  LD:"lower div", BR:"breadth", DP:"depth", DS:"design",
+  PE:"prof elective", TE:"tech elective", GE:"general ed"
+};
+
+function q(label, sub, list){ return {label, sub, list}; }
+
+const PLANS = [
+{
+  id:"mlc", name:"Machine Learning & Controls", rank:1, load:59, finish:"Fall 2027", risk:"lo",
+  headline:"Every required course is on this year's schedule. Nothing depends on a section that doesn't exist yet.",
+  why:[
+    "All ten required major courses — both lower division, all four breadth, all four depth — are offered between Fall 2026 and Spring 2027. <b>You finish the actual major by Spring 2027.</b> Everything after that is electives you get to choose.",
+    "That is the difference that matters. Six of the eight depths depend on at least one course that either isn't offered this year or can't be reached in time. This one doesn't.",
+    "ECE 174 needs only MATH 18 and ECE 15, both done — so you start the depth in your first quarter back.",
+    "Four free upper-division technical electives, the most of any depth, so you control how hard your last two quarters are."
+  ],
+  watch:[
+    "<b>ECE 174 runs in Fall 2026 and nowhere else this year.</b> If you miss it, ECE 175A in Winter is gone too, and the depth slips a full year. This is the single most important course on your Fall schedule after ECE 65.",
+    "ECE 107 is offered Fall and Winter only — it is not available in Spring. Winter 2027 is your last chance this year.",
+    "ECE 100 skips Winter entirely (Fall and Spring only), which is why it sits in Spring 2027 here."
+  ],
+  terms:[
+    q("Fall 2026","Retake quarter, kept to four. ECE 174 is Fall-only and unlocks the depth.",[["ECE 65",R.LD],["ECE 109",R.BR],["ECE 174",R.DP],["COMM 10",R.GE]]),
+    q("Winter 2027","Five courses, but ECE 140A and the COMM elective are light. Last call for ECE 107.",[["ECE 101",R.BR],["ECE 107",R.BR],["ECE 175A",R.DP],["ECE 140A",R.TE],["COMM 1xx a",R.GE]]),
+    q("Spring 2027","Major requirements finish here. ECE 171A and 175B are both Spring-only.",[["ECE 100",R.BR],["ECE 171A",R.DP],["ECE 175B",R.DP],["ECE 17",R.LD]]),
+    q("Summer 2027","Nothing technical. All four are reliably offered in summer.",[["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE],["PHYS 2D",R.TE]]),
+    q("Fall 2027","Graduating quarter — every course here is a free choice you can swap.",[["ECE 111",R.DS],["ECE 158A",R.TE],["ECE 108",R.TE],["ECE 171B",R.TE]])
+  ],
+  checks:[["Lower division","ECE 17, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 107, 109","4 of 4"],["Depth","ECE 171A, 174, 175A + 175B","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 140A, 158A, 108, 171B","4 of 4"],["UD/LD tech elective","PHYS 2D (CHEM 6A ✓ covers the other)","1 of 1"]]
+},
+{
+  id:"csd", name:"Computer System Design", rank:2, load:56, finish:"Fall 2027", risk:"md",
+  headline:"Lowest workload of the eight, but ECE 116 is a Fall-only breadth course you cannot reach until 2027.",
+  why:[
+    "Lightest total load (56), because the depth is choose-five-from-eleven and the work is project and software heavy rather than proof heavy.",
+    "You never need ECE 107, ECE 102 or ECE 103 — this is the only depth that skips all three of the hardest breadth courses.",
+    "The catch: <b>ECE 116 is a required breadth course, offered Fall only, and its prerequisite ECE 18 is also Fall-26 only.</b> You cannot take both in the same quarter, so ECE 116 has to wait for Fall 2027.",
+    "That makes your graduation depend on one course being offered again next year. It ran this Fall, so it probably will — but there is no substitute if it doesn't."
+  ],
+  watch:[
+    "<b>ECE 18 must be taken in Fall 2026.</b> It is offered once all year, and ECE 116 is worthless to you without it.",
+    "ECE 17 also belongs in Fall 2026 — ECE 141A is Winter-only and requires it.",
+    "Confirm ECE 116 appears on the 2027-28 tentative list as soon as it is published. If it vanishes, this depth breaks and you would switch to Machine Learning & Controls."
+  ],
+  terms:[
+    q("Fall 2026","Five courses, but ECE 17 and 18 are light. Both are forced into this quarter.",[["ECE 65",R.LD],["ECE 18",R.LD],["ECE 17",R.TE],["ECE 109",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","ECE 140A and 141A are both Winter-only.",[["ECE 101",R.BR],["ECE 140A",R.DP],["ECE 141A",R.DP],["ECE 111",R.DP]]),
+    q("Spring 2027","All four are Spring-only or Spring-last-chance.",[["ECE 100",R.BR],["ECE 140B",R.DS],["ECE 141B",R.DP],["ECE 115",R.TE]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","ECE 116 lands here — the one course this plan is betting on.",[["ECE 116",R.BR],["ECE 158A",R.DP],["ECE 108",R.TE],["ECE 161A",R.TE]])
+  ],
+  checks:[["Lower division","ECE 18, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 109, 116","4 of 4"],["Depth (5 of 11)","ECE 111, 140A, 141A, 141B, 158A","5 of 5"],["Design","ECE 140B","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 115, 108, 161A","3 of 3"],["UD/LD tech elective","ECE 17","1 of 1"]]
+},
+{
+  id:"pwr", name:"Power Engineering", rank:3, load:60, finish:"Fall 2027", risk:"md",
+  headline:"The whole depth is available this year — but the offering pattern is one shot per course, no second chances.",
+  why:[
+    "All five depth courses run in 2026-27: ECE 121A and 128A in Fall, 121B and 125A in Winter, 125B in Spring. <b>Your depth is finished by Spring 2027.</b>",
+    "ECE 121A needs only ECE 35 and ECE 128A needs only upper-division standing, so you start the depth immediately while retaking ECE 65.",
+    "The cost is six fixed breadth courses and only one free technical elective — almost no room to dodge a hard course.",
+    "ECE 102 has to wait for Fall 2027 because it requires ECE 100, and ECE 100 doesn't run in Winter."
+  ],
+  watch:[
+    "<b>Every depth course is offered exactly once this year.</b> Miss ECE 121A in Fall and 121B, 125A and 125B all fall over behind it — that is a twelve-month delay.",
+    "ECE 128B (Winter) is an approved substitute for ECE 125B (Spring) if Spring gets too heavy.",
+    "Winter 2027 is load 15 and Spring is 14. This plan front-loads pain into the middle."
+  ],
+  terms:[
+    q("Fall 2026","Start the depth now — both courses need only what you already have.",[["ECE 65",R.LD],["PHYS 2D",R.LD],["ECE 121A",R.DP],["ECE 128A",R.DP],["COMM 10",R.GE]]),
+    q("Winter 2027","Hardest quarter. Both power courses are Winter-only.",[["ECE 101",R.BR],["ECE 107",R.BR],["ECE 121B",R.DP],["ECE 125A",R.DP]]),
+    q("Spring 2027","Depth closes out. ECE 125B is Spring-only.",[["ECE 100",R.BR],["ECE 125B",R.DP],["ECE 103",R.BR],["ECE 109",R.BR]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","ECE 102 finally unlocks now that ECE 100 is done.",[["ECE 102",R.BR],["ECE 111",R.DS],["ECE 108",R.TE],["ECE 17",R.TE]])
+  ],
+  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 103, 107, 109","6 of 6"],["Depth","ECE 121A, 121B, 125A, 128A, 125B","5 of 5"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech elective","ECE 108","1 of 1"],["UD/LD tech elective","ECE 17","1 of 1"]]
+},
+{
+  id:"ecs", name:"Electronic Circuits & Systems", rank:4, load:63, finish:"Fall 2027 — only with a concurrency exception", risk:"hi",
+  headline:"Finishing in 2027 requires taking ECE 100 alongside your ECE 65 retake. Otherwise this is Spring 2028.",
+  why:[
+    "All three depth courses sit behind ECE 102, which sits behind ECE 100, which sits behind ECE 65. That is the longest chain in the major and you are starting at the bottom of it.",
+    "ECE 102 runs Fall and Winter only. To reach it in Winter 2027 you must finish ECE 100 in Fall 2026 — and ECE 100 in Fall 2026 means taking it <b>concurrently with the ECE 65 you just failed</b>, which needs department approval.",
+    "Without that exception: ECE 100 in Spring 2027, ECE 102 in Fall 2027, ECE 165 in Spring 2028. <b>Graduation moves to Spring 2028.</b>",
+    "ECE 164 is also the single heaviest course in the catalog, and it lands in your final quarter next to ECE 166."
+  ],
+  watch:[
+    "<b>This is the one plan that asks you to overload the quarter you can least afford to.</b> Given the ECE 65 result, think hard before committing.",
+    "ECE 164 and ECE 166 are Fall-only and both require ECE 102 — they cannot happen before Fall 2027 under any ordering.",
+    "Fall 2026 at load 15 and Winter 2027 at load 15 back to back is brutal."
+  ],
+  terms:[
+    q("Fall 2026","Load 15. ECE 100 concurrent with ECE 65 requires department approval.",[["ECE 65",R.LD],["ECE 100",R.BR],["PHYS 2D",R.LD],["ECE 109",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","ECE 102 is the gate to the whole depth. Last chance for ECE 107.",[["ECE 102",R.BR],["ECE 101",R.BR],["ECE 107",R.BR],["ECE 103",R.BR]]),
+    q("Spring 2027","ECE 165 is Spring-only and needs ECE 102 behind it.",[["ECE 165",R.DP],["ECE 111",R.DS],["ECE 115",R.TE],["ECE 17",R.TE]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","Load 15 — the two remaining depth courses are both Fall-only.",[["ECE 164",R.DP],["ECE 166",R.DP],["ECE 158A",R.TE],["ECE 108",R.TE]])
+  ],
+  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 103, 107, 109","6 of 6"],["Depth","ECE 164, 165, 166","3 of 3"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 115, 158A, 108","3 of 3"],["UD/LD tech elective","ECE 17","1 of 1"]]
+},
+{
+  id:"pho", name:"Photonics", rank:5, load:62, finish:"Winter 2028", risk:"md",
+  headline:"Costs you an extra quarter, purely because ECE 184 and its prerequisite ECE 182 are both Winter-only.",
+  why:[
+    "ECE 184 requires ECE 182. Both are offered in Winter and only in Winter, so they cannot happen in the same year. ECE 182 in Winter 2027 forces ECE 184 into <b>Winter 2028</b>.",
+    "Everything else is clean: ECE 107 needs nothing you don't have, so it goes in Fall 2026 and unlocks ECE 182 immediately.",
+    "ECE 185 is an approved substitute for ECE 184, but it is Spring-only and needs ECE 183 — that lands Spring 2028, which is worse.",
+    "Spring 2027 is load 17, the heaviest quarter in any of these plans, because ECE 181 and 183 both land there."
+  ],
+  watch:[
+    "The extra quarter is structural, not fixable by reordering. Only take this depth if you actually want optics.",
+    "ECE 181 runs Fall and Spring — but the Fall section is out of reach because ECE 103 can't be done before Winter."
+  ],
+  terms:[
+    q("Fall 2026","ECE 107 early is what makes the optics sequence work at all.",[["ECE 65",R.LD],["PHYS 2D",R.LD],["ECE 107",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","ECE 182 is Winter-only and gates ECE 184 a year out.",[["ECE 101",R.BR],["ECE 103",R.BR],["ECE 182",R.DP],["ECE 109",R.BR]]),
+    q("Spring 2027","Load 17. Both remaining optics courses land together.",[["ECE 100",R.BR],["ECE 181",R.DP],["ECE 183",R.DP],["ECE 111",R.DS],["ECE 17",R.TE]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","Light quarter — you are waiting on ECE 184.",[["ECE 108",R.TE],["ECE 158A",R.TE]]),
+    q("Winter 2028","The extra quarter. ECE 184 could not have happened sooner.",[["ECE 184",R.DP],["ECE 158B",R.TE]])
+  ],
+  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 103, 107, 109","5 of 5"],["Depth","ECE 181, 182, 183, 184","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 108, 158A, 158B","3 of 3"],["UD/LD tech elective","ECE 17","1 of 1"]]
+},
+{
+  id:"dev", name:"Electronic Devices & Materials", rank:6, load:64, finish:"Spring 2028", risk:"hi",
+  headline:"A four-course chain at one course per year-slot, ending in a cleanroom lab. Two extra quarters.",
+  why:[
+    "ECE 135A requires ECE 103, and ECE 103 requires both ECE 65 and PHYS 2D — neither of which you have before Fall 2026. ECE 135A is Fall-only, so it cannot happen until <b>Fall 2027</b>.",
+    "From there it is strictly one per quarter: ECE 135B is Winter-only, ECE 136L is Spring-only. That is Winter 2028 and Spring 2028, with nothing else left to take alongside them.",
+    "Highest total load of the eight (64), and ECE 136L is device fabrication in a cleanroom — the largest single time commitment in the undergraduate catalog.",
+    "Your last two quarters are one course each. You would be paying full-time enrollment for a trickle."
+  ],
+  watch:[
+    "<b>The chain has zero slack.</b> One missed section adds another full year.",
+    "This was my earlier best case for this depth on a wrong prerequisite — I had ECE 135A needing only PHYS 2C–D. The department's own page says ECE 103, which is what pushes it out."
+  ],
+  terms:[
+    q("Fall 2026","Standard opening.",[["ECE 65",R.LD],["PHYS 2D",R.LD],["ECE 107",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","ECE 103 opens the chain — but ECE 135A won't run again until Fall.",[["ECE 101",R.BR],["ECE 103",R.BR],["ECE 109",R.BR],["ECE 148",R.TE]]),
+    q("Spring 2027","ECE 183 needs 103 and 107, both now done.",[["ECE 100",R.BR],["ECE 183",R.DP],["ECE 111",R.DS],["ECE 17",R.TE]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","ECE 135A at last, plus ECE 102 now that ECE 100 is behind you.",[["ECE 135A",R.DP],["ECE 102",R.BR],["ECE 158A",R.TE]]),
+    q("Winter 2028","One course. ECE 135B is Winter-only.",[["ECE 135B",R.DP]]),
+    q("Spring 2028","One course, and it is the cleanroom lab.",[["ECE 136L",R.DP]])
+  ],
+  checks:[["Lower division","PHYS 2D, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 103, 107, 109","6 of 6"],["Depth","ECE 135A, 135B, 136L, 183","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 148, 158A","2 of 2"],["UD/LD tech elective","ECE 17","1 of 1"]]
+},
+{
+  id:"sip", name:"Signal & Image Processing", rank:7, load:58, finish:"Spring 2028 — if ECE 161C comes back", risk:"hi",
+  headline:"ECE 161C is not offered anywhere in 2026-27, and it is a required depth course with no substitute.",
+  why:[
+    "<b>ECE 161C does not appear in Fall, Winter or Spring of this year's schedule.</b> The depth requires it. There is no alternative course listed in your audit.",
+    "The rest of the chain is already slow: ECE 161A is Fall-only and requires ECE 101, which you cannot finish before Fall 2026 — so 161A waits until Fall 2027, and ECE 161B (Winter-only) until Winter 2028.",
+    "That leaves ECE 161C for Spring 2028 at the earliest, and only if the department schedules it again. If it stays off the list, this depth is not completable on any timeline you can plan around.",
+    "The workload itself is fine — load 58, second-lowest. The problem is entirely availability."
+  ],
+  watch:[
+    "<b>Ask the ECE undergraduate office directly whether ECE 161C is coming back.</b> Do not choose this depth on hope.",
+    "If they confirm it, this is a reasonable track. If they don't, Machine Learning & Controls uses many of the same courses and is fully available."
+  ],
+  terms:[
+    q("Fall 2026","ECE 101 here is what makes ECE 161A possible in Fall 2027.",[["ECE 65",R.LD],["ECE 101",R.BR],["ECE 109",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","Last chance for ECE 107 this year.",[["ECE 107",R.BR],["ECE 111",R.DS],["ECE 140A",R.TE],["ECE 148",R.TE]]),
+    q("Spring 2027","ECE 153 is Spring-only.",[["ECE 100",R.BR],["ECE 153",R.DP],["ECE 172A",R.TE],["ECE 17",R.LD]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","ECE 161A finally reachable.",[["ECE 161A",R.DP],["ECE 158A",R.TE],["ECE 18",R.TE]]),
+    q("Winter 2028","One course.",[["ECE 161B",R.DP]]),
+    q("Spring 2028","Only if the department brings ECE 161C back.",[["ECE 161C",R.DP]])
+  ],
+  checks:[["Lower division","ECE 17, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 107, 109","4 of 4"],["Depth","ECE 153, 161A, 161B, 161C","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 140A, 148, 172A, 158A","4 of 4"],["UD/LD tech elective","ECE 18","1 of 1"]]
+},
+{
+  id:"com", name:"Communication Systems", rank:8, load:63, finish:"Blocked — ECE 157A not offered", risk:"hi",
+  headline:"ECE 157A is not on the schedule at all this year, and six fixed depth courses leave you nowhere to go.",
+  why:[
+    "<b>Neither ECE 157A nor 157B appears anywhere in 2026-27.</b> ECE 157A is required for this depth and has no substitute in your audit.",
+    "Six required depth courses is the most of any track, and they interlock: ECE 155 needs ECE 153, ECE 159 needs ECE 153, ECE 157A needs ECE 161A. ECE 153 is Spring-only, so ECE 155 and 159 both slip past it.",
+    "Realistically: ECE 153 Spring 2027, ECE 155 and 161A Fall 2027, ECE 159 Winter 2028, ECE 157A unknown. <b>You would be waiting on a course the department is not currently running.</b>",
+    "Do not pick this depth right now."
+  ],
+  watch:[
+    "<b>Treat this as unavailable until the ECE office confirms ECE 157A is returning.</b>",
+    "If communications is genuinely what you want, Machine Learning & Controls shares ECE 109 and 174 and is fully schedulable, and you can use ECE 155, 158A and 161A as technical electives there."
+  ],
+  terms:[
+    q("Fall 2026","Standard opening.",[["ECE 65",R.LD],["ECE 101",R.BR],["ECE 109",R.BR],["COMM 10",R.GE]]),
+    q("Winter 2027","Last chance for ECE 107.",[["ECE 107",R.BR],["ECE 111",R.DS],["ECE 148",R.TE],["PHYS 2D",R.TE]]),
+    q("Spring 2027","ECE 153 is Spring-only and gates two more depth courses.",[["ECE 100",R.BR],["ECE 153",R.DP],["ECE 17",R.LD]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx a",R.GE],["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE]]),
+    q("Fall 2027","Three depth courses at once, all Fall-only.",[["ECE 155",R.DP],["ECE 158A",R.DP],["ECE 161A",R.DP],["ECE 102",R.BR]]),
+    q("Winter 2028","ECE 159 is Winter-only. ECE 157A has no date.",[["ECE 159",R.DP],["ECE 157A",R.DP]])
+  ],
+  checks:[["Lower division","ECE 17, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 102, 107, 109","5 of 5"],["Depth","ECE 153, 155, 157A, 158A, 159, 161A","6 of 6"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech elective","ECE 148","1 of 1"],["UD/LD tech elective","PHYS 2D","1 of 1"]]
+}
+];
+
+/* ---------------- state ---------------- */
+const KEY = "ee-plan-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ state = {}; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+const DIFF = ["","var(--d1)","var(--d2)","var(--d3)","var(--d4)","var(--d5)"];
+const QN = ["Fall 2026","Winter 2027","Spring 2027"];
+
+/* Renders the 2026-27 offering pattern as three F/W/S slots. A course the
+   department is not running this year gets a loud chip instead. */
+function availability(c){
+  const on = [c.q[0] !== " ", c.q[1] !== " ", c.q[2] !== " "];
+  if(!on.some(Boolean)){
+    return `<span class="pill warnp" title="Not on the ECE tentative course list for Fall 26, Winter 27 or Spring 27">not offered 26–27</span>`;
+  }
+  const label = on.map((v,i)=>v?QN[i]:null).filter(Boolean).join(", ");
+  const tip = c.a
+    ? `Assumed offered every quarter — the ECE list does not cover this department`
+    : `Offered ${label}`;
+  const slots = ["F","W","S"].map((L,i)=>
+    `<i class="${on[i]?"on":""}">${L}</i>`).join("");
+  return `<span class="qs${c.a?" est":""}" title="${tip}">${slots}</span>`;
+}
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+// Finish strings carry an optional caveat after an em dash; split so the
+// term itself stays scannable and the caveat sits underneath it.
+const finishMain = p => p.finish.split(" — ")[0];
+const finishNote = p => p.finish.split(" — ")[1] || "";
+const id = s => s.replace(/[^a-z0-9]/gi,"_");
+
+/* Ten segments, each worth two load points, so a 20-load quarter fills the bar. */
+function segs(load, max){
+  const filled = Math.min(max, Math.round(load/2));
+  const sev = load>=15 ? "var(--d5)" : load>=13 ? "var(--d4)" : load>=11 ? "var(--d3)" : "var(--d1)";
+  let h = `<span class="segs" style="--sev:${sev}">`;
+  for(let i=0;i<max;i++) h += `<i class="${i<filled?"on":""}"></i>`;
+  return h + "</span>";
+}
+
+function courseRow(planId, code, tag){
+  const c = C[code];
+  const checked = state[code] ? " checked" : "";
+  const cid = `${planId}_${id(code)}`;
+  const off = availability(c);
+  // The input is nested inside the label, so no `for` attribute — adding one
+  // makes some browsers fire the toggle twice when you click the box itself.
+  return `<label class="row${checked?" done":""}">
+    <input type="checkbox" id="${cid}" data-code="${esc(code)}"${checked}>
+    <span class="code">${esc(code)}</span>
+    <span class="body">
+      <span class="ttl">${esc(c.t)}</span>
+      <span class="sub"><b>Prereq:</b> ${c.p}</span>
+    </span>
+    <span class="meta">
+      <span class="pill req">${tag}</span>${off}
+      <span class="dot" style="--sev:${DIFF[c.d]}" title="Load ${c.d} of 5"></span>
+    </span>
+  </label>`;
+}
+
+function termCard(planId, t){
+  const load = t.list.reduce((a,[code])=>a+C[code].d,0);
+  const units = t.list.reduce((a,[code])=>a+C[code].u,0);
+  const doneN = t.list.filter(([code])=>state[code]).length;
+  const sev = load>=15 ? "var(--d5)" : load>=13 ? "var(--d4)" : load>=11 ? "var(--d3)" : "var(--d1)";
+  return `<section class="term">
+    <div class="term-hd">
+      <span class="tl">${esc(t.label)}</span>
+      <span class="tsub">${esc(t.sub)}</span>
+      <span class="termcount" data-termcount>${doneN}/${t.list.length} done · ${units} units</span>
+      <span class="loadchip"><span class="ll">Load ${load}</span>${segs(load,10)}</span>
+    </div>
+    ${t.list.map(([code,tag])=>courseRow(planId,code,tag)).join("")}
+  </section>`;
+}
+
+function planPanel(p){
+  const total = p.terms.reduce((a,t)=>a+t.list.length,0);
+  const units = p.terms.reduce((a,t)=>a+t.list.reduce((b,[c])=>b+C[c].u,0),0);
+  const riskLabel = {lo:"Low risk", md:"Medium risk", hi:"High risk"}[p.risk];
+  return `<div class="panel" id="p-${p.id}" role="tabpanel" hidden data-plan="${p.id}" data-total="${total}">
+    <div class="lede">
+      <div class="card">
+        <div class="eyebrow">Depth ${p.rank} of 8 · ranked by total load</div>
+        <h2>${esc(p.name)}</h2>
+        <p>${p.headline}</p>
+        <ul>${p.why.map(w=>`<li>${w}</li>`).join("")}</ul>
+      </div>
+      <div>
+        <div class="facts">
+          <div class="fact"><span class="lab">Finishes</span><span class="val">${esc(finishMain(p))}</span>${finishNote(p)?`<span class="cn">${esc(finishNote(p))}</span>`:""}</div>
+          <div class="fact"><span class="lab">Total load</span><span class="val">${p.load}</span></div>
+          <div class="fact"><span class="lab">Courses left</span><span class="val">${total}</span></div>
+          <div class="fact"><span class="lab">Units left</span><span class="val">${units}</span></div>
+          <div class="fact"><span class="lab">Schedule risk</span><span class="val" style="color:${p.risk==="lo"?"var(--ok)":p.risk==="md"?"var(--warn)":"var(--crit)"}">${riskLabel}</span></div>
+          <div class="fact"><span class="lab">Terms</span><span class="val">${p.terms.length}</span></div>
+        </div>
+        <details>
+          <summary>What to watch on this track</summary>
+          <div class="dbody">${p.watch.map(w=>`<p>${w}</p>`).join("")}</div>
+        </details>
+      </div>
+    </div>
+
+    <div class="sechead"><h3>Quarter by quarter</h3><span>Check a course off as you finish it — it syncs across every tab.</span></div>
+    <div class="terms">${p.terms.map(t=>termCard(p.id,t)).join("")}</div>
+
+    <div class="sechead"><h3>How this satisfies the audit</h3><span>Seven major requirements, all covered.</span></div>
+    <div class="checks">${p.checks.map(([l,v,n])=>`<div class="chk"><span class="cl">${esc(l)}</span><span class="cv">${esc(v)}</span><span class="cn">${esc(n)}</span></div>`).join("")}</div>
+  </div>`;
+}
+
+/* ---------------- compare panel ---------------- */
+function comparePanel(){
+  const rows = PLANS.map(p=>{
+    const fixed = p.checks.slice(0,4).reduce((a,c)=>a+parseInt(c[2]),0);
+    const free = 21 - fixed - 3;
+    return `<tr class="${p.rank===1?"hi":""}">
+      <td class="rank">${p.rank}</td>
+      <td><b>${esc(p.name)}</b></td>
+      <td class="num">${p.load}</td>
+      <td class="num">${fixed}</td>
+      <td class="num">${free}</td>
+      <td>${esc(finishMain(p))}${finishNote(p)?`<br><span class="rank">${esc(finishNote(p))}</span>`:""}</td>
+      <td><span class="tag ${p.risk}">${{lo:"low",md:"medium",hi:"high"}[p.risk]}</span></td>
+      <td class="verdict">${esc(p.headline)}</td>
+    </tr>`;
+  }).join("");
+
+  return `<div class="panel" id="p-compare" role="tabpanel" hidden>
+    <div class="lede">
+      <div class="card">
+        <div class="eyebrow">The finding that drives everything</div>
+        <h2>All eight depths need 18 more major courses. Only three of them finish in 2027.</h2>
+        <p>Every depth adds up to the same 18 remaining major courses, plus COMM 10 and two upper-division COMM electives — <b>21 courses either way</b>. Depth choice cannot make the degree shorter.</p>
+        <p>What it does change is whether the courses <b>exist when you need them</b>. Once the real 2026–27 schedule is applied, the eight tracks split hard: three finish Fall 2027, one needs a concurrency exception to do the same, one costs an extra quarter outright, and three run into courses that either aren't offered this year or can't be reached in time.</p>
+        <p>Ranked below by finish date first, then by how much a scheduling surprise would hurt, then by workload.</p>
+      </div>
+      <div>
+        <div class="facts">
+          <div class="fact"><span class="lab">Courses left</span><span class="val">21</span></div>
+          <div class="fact"><span class="lab">Earliest finish</span><span class="val">Fall 2027</span></div>
+          <div class="fact"><span class="lab">Units now</span><span class="val">150</span></div>
+          <div class="fact"><span class="lab">Units needed</span><span class="val">180</span></div>
+          <div class="fact"><span class="lab">UD units now</span><span class="val">12</span></div>
+          <div class="fact"><span class="lab">UD units needed</span><span class="val">60</span></div>
+        </div>
+        <details>
+          <summary>Two moves that lighten every track</summary>
+          <div class="dbody">
+            <p><b>COMM 10 clears DEI.</b> It has been on the approved DEI list since Fall 2015, so the course you already planned for Fall 2026 kills a university requirement for free — and you need it anyway, since every upper-division COMM course requires it.</p>
+            <p><b>Both professional electives can come from Rady.</b> Your audit allows the pair to come from MGT 100–199 or COGS 100–199 instead of engineering, as long as both come from the same department. Two management courses are far lighter than two more ECE courses, and they run in summer.</p>
+            <p>American History &amp; Institutions is already covered by your high school record, so no course is spent on it. That leaves your GE as pure communication: COMM 20 ✓, COMM 10, and two upper-division COMM electives.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="sechead"><h3>All eight depths, ranked</h3><span>Fixed = courses you cannot substitute. Free = electives you choose.</span></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>#</th><th>Depth</th><th>Load</th><th>Fixed</th><th>Free</th><th>Finishes</th><th>Risk</th><th>Verdict</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+
+    <div class="sechead"><h3>Fixed points in every plan</h3><span>Your constraints, already built in.</span></div>
+    <div class="checks">
+      <div class="chk"><span class="cl">Summer session 2, 2026</span><span class="cv">PHIL 184 — Philosophy and Film</span><span class="cn">completes the Philosophy area study</span></div>
+      <div class="chk"><span class="cl">Fall 2026 · required</span><span class="cv">ECE 65 retake</span><span class="cn">gates ECE 100, 102, 103, 115</span></div>
+      <div class="chk"><span class="cl">Fall 2026 · your call</span><span class="cv">COMM 10</span><span class="cn">also clears DEI</span></div>
+      <div class="chk"><span class="cl">Social science area study</span><span class="cv">COMM 20 ✓ + 2 upper-div COMM</span><span class="cn">the comm path, as planned</span></div>
+      <div class="chk"><span class="cl">Already cleared</span><span class="cv">American History &amp; Institutions</span><span class="cn">high school record — no course needed</span></div>
+      <div class="chk"><span class="cl">Already banked</span><span class="cv">CHEM 6A</span><span class="cn">covers 1 of 2 tech electives</span></div>
+    </div>
+
+    <div class="sechead"><h3>Already satisfied</h3><span>From your 07/28/2026 audit — nothing here needs repeating.</span></div>
+    <div class="checks">
+      <div class="chk"><span class="cl">Lower-division ECE</span><span class="cv">ECE 5, 15, 25, 30, 35, 45</span><span class="cn">complete</span></div>
+      <div class="chk"><span class="cl">Mathematics</span><span class="cv">MATH 18, 20A, 20B, 20C, 20D, 20E</span><span class="cn">complete</span></div>
+      <div class="chk"><span class="cl">Physics</span><span class="cv">PHYS 2A, 2B, 2C</span><span class="cn">PHYS 2D still open</span></div>
+      <div class="chk"><span class="cl">Warren writing</span><span class="cv">WCWP 100</span><span class="cn">complete</span></div>
+      <div class="chk"><span class="cl">Formal skills</span><span class="cv">MATH 10A, MATH 20B</span><span class="cn">complete</span></div>
+      <div class="chk"><span class="cl">Humanities area study</span><span class="cv">PHIL 1, PHIL 161, PHIL 184</span><span class="cn">complete after summer</span></div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- render ---------------- */
+const tabsEl = document.getElementById("tabs");
+const panelsEl = document.getElementById("panels");
+
+tabsEl.innerHTML =
+  `<button class="tab" role="tab" data-target="compare" aria-controls="p-compare" aria-selected="false">
+     <span class="tn">Compare all 8</span><span class="tm">start here</span>
+   </button>` +
+  PLANS.map(p=>`<button class="tab" role="tab" data-target="${p.id}" aria-controls="p-${p.id}" aria-selected="false">
+     <span class="tn">${esc(p.name)}</span>
+     <span class="tm">load ${p.load} · ${esc(finishMain(p))}${finishNote(p)?"*":""}</span>
+   </button>`).join("");
+
+panelsEl.innerHTML = comparePanel() + PLANS.map(planPanel).join("");
+
+function show(target){
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected", String(t.dataset.target===target)));
+  document.querySelectorAll(".panel").forEach(p=>{ p.hidden = (p.id !== "p-"+target); });
+  updateMeters();
+  try{ localStorage.setItem(KEY+":tab", target); }catch(e){}
+}
+
+tabsEl.addEventListener("click", e=>{
+  const t = e.target.closest(".tab");
+  if(t) show(t.dataset.target);
+});
+
+panelsEl.addEventListener("change", e=>{
+  const cb = e.target;
+  if(cb.type !== "checkbox") return;
+  const code = cb.dataset.code;
+  if(cb.checked) state[code] = true; else delete state[code];
+  save();
+  document.querySelectorAll(`input[data-code="${CSS.escape(code)}"]`).forEach(o=>{
+    o.checked = cb.checked;
+    o.closest(".row").classList.toggle("done", cb.checked);
+  });
+  refreshTermCounts();
+  updateMeters();
+});
+
+function refreshTermCounts(){
+  document.querySelectorAll(".term").forEach(t=>{
+    const boxes = [...t.querySelectorAll("input[type=checkbox]")];
+    const n = boxes.filter(b=>b.checked).length;
+    const el = t.querySelector("[data-termcount]");
+    el.textContent = el.textContent.replace(/^\d+\/\d+ done/, `${n}/${boxes.length} done`);
+  });
+}
+
+function updateMeters(){
+  const active = document.querySelector(".panel:not([hidden])");
+  const boxes = active ? [...active.querySelectorAll("input[type=checkbox]")] : [];
+  const total = boxes.length || 21;
+  const done = boxes.filter(b=>b.checked).length;
+  document.getElementById("m-done").innerHTML = `${done}<small>/${total}</small>`;
+  document.getElementById("m-bar").style.width = (done/total*100) + "%";
+
+  const units = 150 + done*4;
+  document.getElementById("m-units").innerHTML = `${Math.min(units,999)}<small>/180</small>`;
+  document.getElementById("m-ubar").style.width = Math.min(100, units/180*100) + "%";
+
+  const ud = 12 + boxes.filter(b=>b.checked && !/^(ECE 17|ECE 18|PHYS 2D|COMM 10)$/.test(b.dataset.code)).length*4;
+  document.getElementById("m-ud").innerHTML = `${ud}<small>/60</small>`;
+  document.getElementById("m-udbar").style.width = Math.min(100, ud/60*100) + "%";
+}
+
+document.getElementById("reset").addEventListener("click", ()=>{
+  state = {}; save();
+  document.querySelectorAll("input[type=checkbox]").forEach(b=>{
+    b.checked = false; b.closest(".row").classList.remove("done");
+  });
+  refreshTermCounts(); updateMeters();
+});
+
+let start = "compare";
+try{ const s = localStorage.getItem(KEY+":tab"); if(s) start = s; }catch(e){}
+if(!document.getElementById("p-"+start)) start = "compare";
+show(start);
+refreshTermCounts();
+</script>
