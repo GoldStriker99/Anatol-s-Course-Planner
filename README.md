@@ -30,6 +30,15 @@ Signal & Image Processing outright.
 Machine Learning & Controls wins because all ten of its required major courses run between Fall 2026 and
 Spring 2027 — the major itself is finished by Spring, and everything after is electives you choose.
 
+### RF variant
+
+A ninth tab, **ML & Controls — RF Track**, carries the same depth and the same Fall 2027 finish (load 61 vs 59)
+but spends the free elective slots on wireless: **ECE 123** Antenna Systems Engineering (Spring 27, needs only
+ECE 107), **ECE 161A** Digital Signal Processing, **ECE 158A** Data Networks I, and **ECE 115** Fast Prototyping.
+The only structural change is moving ECE 17 into Fall 2026 to free the Spring slot.
+
+ECE 166 Microwave Systems is deliberately absent — it requires ECE 102 → ECE 100, which puts it in Fall 2028.
+
 ## Fixed constraints built into every plan
 
 - **PHIL 184** in summer session 2, 2026 — completes the Philosophy area study

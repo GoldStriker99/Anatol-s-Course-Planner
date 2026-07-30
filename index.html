@@ -335,6 +335,7 @@ const C = {
   "ECE 111":  {t:"Advanced Digital Design Project", u:4, d:3, q:"FWS", p:"ECE 25 ✓"},
   "ECE 115":  {t:"Fast Prototyping", u:4, d:3, q:" WS", p:"ECE 65"},
   "ECE 116":  {t:"Advanced Hardware & Software Design", u:4, d:3, q:"F  ", p:"ECE 15 ✓, ECE 5 ✓ and ECE 18"},
+  "ECE 123":  {t:"Antenna Systems Engineering", u:4, d:4, q:"  S", p:"ECE 107 (C– or better)"},
   "ECE 121A": {t:"Power Systems Analysis & Fundamentals", u:4, d:3, q:"F  ", p:"ECE 35 ✓"},
   "ECE 121B": {t:"Energy Conversion", u:4, d:3, q:" W ", p:"ECE 121A"},
   "ECE 125A": {t:"Power Electronics I", u:4, d:4, q:" W ", p:"ECE 121A"},
@@ -409,6 +410,32 @@ const PLANS = [
     q("Fall 2027","Graduating quarter — every course here is a free choice you can swap.",[["ECE 111",R.DS],["ECE 158A",R.TE],["ECE 108",R.TE],["ECE 171B",R.TE]])
   ],
   checks:[["Lower division","ECE 17, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 107, 109","4 of 4"],["Depth","ECE 171A, 174, 175A + 175B","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 140A, 158A, 108, 171B","4 of 4"],["UD/LD tech elective","PHYS 2D (CHEM 6A ✓ covers the other)","1 of 1"]]
+},
+{
+  id:"mlcrf", name:"ML & Controls — RF Track", rank:1, variant:1, load:61, finish:"Fall 2027", risk:"lo",
+  headline:"Same depth, same graduation date. Three of the five free elective slots spent on wireless and RF instead of generic fillers.",
+  why:[
+    "Machine Learning &amp; Controls already requires <b>ECE 107 (Electromagnetism)</b> as breadth, and ECE 107 is the gateway to most of the RF catalog. That means an RF-flavored version of this depth costs you nothing structural.",
+    "<b>ECE 123 Antenna Systems Engineering</b> needs only ECE 107, which you finish in Winter 2027. It is Spring-only and it is the most directly relevant course in the catalog to what you are doing at the internship.",
+    "<b>ECE 161A Digital Signal Processing</b> needs only ECE 101 (Winter 2027). Everything SDR, modulation and filtering runs through it.",
+    "<b>ECE 158A Data Networks I</b> was already in the base plan — wireless networking is directly adjacent, so it stays.",
+    "<b>ECE 115 Fast Prototyping</b> replaces ECE 140A in Winter. Bench and board-level prototyping is the hands-on half of RF work."
+  ],
+  watch:[
+    "<b>The only change to the base plan is moving ECE 17 into Fall 2026</b> to free the Spring slot for ECE 123. Fall goes from four courses to five, load 11 → 13 — ECE 17 is the lightest technical course in the plan.",
+    "<b>ECE 166 Microwave Systems &amp; Circuits is not reachable here.</b> It requires ECE 102, which requires ECE 100, which you don't finish until Spring 2027 — that puts ECE 166 in Fall 2028, a full extra year. The only way to get it is taking ECE 100 concurrently with your ECE 65 retake, which is the overload I would not recommend.",
+    "ECE 155 Digital Communications Theory is an alternative to ECE 123, but it needs ECE 153 first (Spring-only), so it costs two slots instead of one. Antennas or comms theory, not both.",
+    "ECE 161A and ECE 158A are Fall-only, and this assumes the 2027-28 schedule matches this year's. ECE 123 is on the actual current list, so that one is solid.",
+    "ECE 182 (guided-wave and fiber optics) would need ECE 107 finished first, so it only works if you move ECE 107 to Fall 2026."
+  ],
+  terms:[
+    q("Fall 2026","Five courses now — ECE 17 moved here so Spring can take ECE 123.",[["ECE 65",R.LD],["ECE 109",R.BR],["ECE 174",R.DP],["ECE 17",R.LD],["COMM 10",R.GE]]),
+    q("Winter 2027","ECE 107 here is what unlocks antennas in Spring. Last call for it this year.",[["ECE 101",R.BR],["ECE 107",R.BR],["ECE 175A",R.DP],["ECE 115",R.TE],["COMM 1xx a",R.GE]]),
+    q("Spring 2027","Major requirements finish here, and ECE 123 is Spring-only.",[["ECE 100",R.BR],["ECE 171A",R.DP],["ECE 175B",R.DP],["ECE 123",R.TE]]),
+    q("Summer 2027","Nothing technical.",[["COMM 1xx b",R.GE],["MGT 1xx a",R.PE],["MGT 1xx b",R.PE],["PHYS 2D",R.TE]]),
+    q("Fall 2027","Graduating quarter — both electives are wireless.",[["ECE 111",R.DS],["ECE 161A",R.TE],["ECE 158A",R.TE]])
+  ],
+  checks:[["Lower division","ECE 17, ECE 65","2 of 2"],["Breadth","ECE 100, 101, 107, 109","4 of 4"],["Depth","ECE 171A, 174, 175A + 175B","4 of 4"],["Design","ECE 111","1 of 1"],["Professional electives","MGT 100–199 ×2","2 of 2"],["Upper-div tech electives","ECE 115, 123, 161A, 158A","4 of 4"],["UD/LD tech elective","PHYS 2D (CHEM 6A ✓ covers the other)","1 of 1"]]
 },
 {
   id:"csd", name:"Computer System Design", rank:2, load:56, finish:"Fall 2027", risk:"md",
@@ -659,7 +686,9 @@ function planPanel(p){
   return `<div class="panel" id="p-${p.id}" role="tabpanel" hidden data-plan="${p.id}" data-total="${total}">
     <div class="lede">
       <div class="card">
-        <div class="eyebrow">Depth ${p.rank} of 8 · ranked by total load</div>
+        <div class="eyebrow">${p.variant
+          ? "Variant of depth 1 · same 18 major requirements, RF-flavoured electives"
+          : `Depth ${p.rank} of 8 · ranked by finish date, then risk, then load`}</div>
         <h2>${esc(p.name)}</h2>
         <p>${p.headline}</p>
         <ul>${p.why.map(w=>`<li>${w}</li>`).join("")}</ul>
@@ -693,9 +722,9 @@ function comparePanel(){
   const rows = PLANS.map(p=>{
     const fixed = p.checks.slice(0,4).reduce((a,c)=>a+parseInt(c[2]),0);
     const free = 21 - fixed - 3;
-    return `<tr class="${p.rank===1?"hi":""}">
-      <td class="rank">${p.rank}</td>
-      <td><b>${esc(p.name)}</b></td>
+    return `<tr class="${p.id==="mlc"?"hi":""}">
+      <td class="rank">${p.variant?"1·rf":p.rank}</td>
+      <td><b>${esc(p.name)}</b>${p.variant?`<br><span class="rank">same depth, RF electives</span>`:""}</td>
       <td class="num">${p.load}</td>
       <td class="num">${fixed}</td>
       <td class="num">${free}</td>
@@ -734,7 +763,7 @@ function comparePanel(){
       </div>
     </div>
 
-    <div class="sechead"><h3>All eight depths, ranked</h3><span>Fixed = courses you cannot substitute. Free = electives you choose.</span></div>
+    <div class="sechead"><h3>All eight depths, ranked — plus the RF variant</h3><span>Fixed = courses you cannot substitute. Free = electives you choose.</span></div>
     <div class="tablewrap">
       <table>
         <thead><tr><th>#</th><th>Depth</th><th>Load</th><th>Fixed</th><th>Free</th><th>Finishes</th><th>Risk</th><th>Verdict</th></tr></thead>
